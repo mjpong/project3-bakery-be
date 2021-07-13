@@ -15,15 +15,17 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable("flavors", {
+  return db.createTable("types", {
       id: {type:"smallint", primaryKey: true, autoIncrement: true},
-      name: {type: "string", length: 45, notNull:false}
+      name: {type: "string", length: 45, notNull:false},
+      ingredients:{type: "string", length: 500, notNull: false }
   });
 };
 
 exports.down = function(db) {
-  return db.dropTable("flavors");
+  return db.dropTable("types");
 };
+
 
 exports._meta = {
   "version": 1
