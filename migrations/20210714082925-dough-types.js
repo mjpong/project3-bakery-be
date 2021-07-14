@@ -15,7 +15,7 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  return db.createTable("flavors", {
+  return db.createTable("dough_types", {
     id: {
       type: "int",
       primaryKey: true,
@@ -30,7 +30,7 @@ exports.up = function (db) {
 };
 
 exports.down = function (db) {
-  return db.dropTable("flavors");
+  return db.dropTable("dough_types");
 };
 
 exports._meta = {

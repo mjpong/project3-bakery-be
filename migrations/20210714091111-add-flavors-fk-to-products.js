@@ -15,23 +15,27 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  return db.createTable("flavors", {
-    id: {
-      type: "int",
-      primaryKey: true,
-      autoIncrement: true
-    },
-    name: {
-      type: "string",
-      length: 45,
-      notNull: false
+  return db.addColumn('products', 'flavor_id', {
+    type: 'int',
+    notNull: true,
+    foreignKey: {
+      name: 'product_flavor_fk',
+      table: 'flavors',
+      rules: {
+        onDelete: 'CASCADE',
+        onUpdate: 'RESTRICT'
+      },
+      mapping: 'id'
     }
-  });
+  })
 };
 
 exports.down = function (db) {
-  return db.dropTable("flavors");
-};
+  return (
+    db.removeForeignKey("products", "product_flavor_fk"),
+    db.removeColumn("products", "flavor_id")
+  )
+}
 
 exports._meta = {
   "version": 1

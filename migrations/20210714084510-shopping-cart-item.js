@@ -15,22 +15,21 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  return db.createTable("flavors", {
+  return db.createTable("shopping_cart_item", {
     id: {
       type: "int",
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
-      type: "string",
-      length: 45,
-      notNull: false
+    quantity: {
+      "type": "int",
+      "unsigned": true,
     }
   });
 };
 
 exports.down = function (db) {
-  return db.dropTable("flavors");
+  return db.dropTable("shopping_cart_item");
 };
 
 exports._meta = {

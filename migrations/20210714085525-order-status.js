@@ -14,18 +14,23 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
-exports.up = function(db) {
-  return db.createTable("types", {
-      id: {type:"smallint", primaryKey: true, autoIncrement: true},
-      name: {type: "string", length: 45, notNull:false},
-      ingredients:{type: "string", length: 500, notNull: false }
+exports.up = function (db) {
+  return db.createTable("order_status", {
+    id: {
+      type: "int",
+      primaryKey: true,
+      autoIncrement: true
+    },
+    status: {
+      type: "string",
+      length: 45
+    }
   });
 };
 
-exports.down = function(db) {
-  return db.dropTable("types");
+exports.down = function (db) {
+  return db.dropTable("order_status");
 };
-
 
 exports._meta = {
   "version": 1

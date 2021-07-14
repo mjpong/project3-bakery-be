@@ -15,7 +15,7 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  return db.createTable("flavors", {
+  return db.createTable("ingredients", {
     id: {
       type: "int",
       primaryKey: true,
@@ -30,7 +30,7 @@ exports.up = function (db) {
 };
 
 exports.down = function (db) {
-  return db.dropTable("flavors");
+  return db.dropTable("ingredients");
 };
 
 exports._meta = {
