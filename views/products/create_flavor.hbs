@@ -1,0 +1,14 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+<h1>Create New Flavor</h1>
+<form method="POST">
+    <input type="hidden" value="{{csrfToken}}" name="_csrf"/>
+    {{{form}}}
+
+    <input type="submit" value="Add Flavor" class="btn btn-primary"/>
+    <a href="/products">Cancel</a>
+</form>
+{{/block}}
+
+{{/extends}}

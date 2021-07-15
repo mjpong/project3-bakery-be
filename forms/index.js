@@ -70,6 +70,29 @@ const createIngredientForm = () => {
 }
 
 // create dough type form
+const createDoughTypeForm = (ingredients) => {
+    return forms.create({
+        'name': fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            validators: [validators.maxlength(100)]
+        }),
+        'ingredient_id': fields.string({
+            label: "Ingredient",
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.select(),
+            choices: ingredients
+        }),
+
+    })
+}
 
 
 // create product form
@@ -226,6 +249,7 @@ module.exports = {
     createToppingForm,
     createProductForm,
     createIngredientForm,
+    createDoughTypeForm,
     createUserForm,
     createLoginForm,
     bootstrapField
