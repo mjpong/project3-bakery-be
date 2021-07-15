@@ -35,8 +35,8 @@ exports.up = function (db) {
       length: 100
     },
     phone: {
-      type: "int",
-      unsigned: true
+      type: "string",
+      length: 100
     },
     address: {
       type: "string",

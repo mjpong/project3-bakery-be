@@ -15,12 +15,12 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function (db) {
-  return db.addColumn('order_status', 'order_id', {
+  return db.addColumn('orders', 'order_status_id', {
     type: 'int',
     notNull: true,
     foreignKey: {
-      name: 'order_status_order_fk',
-      table: 'orders',
+      name: 'orders_order_status_fk',
+      table: 'order_status',
       rules: {
         onDelete: 'CASCADE',
         onUpdate: 'RESTRICT'
@@ -32,10 +32,11 @@ exports.up = function (db) {
 
 exports.down = function (db) {
   return (
-    db.removeForeignKey("order_status", "order_status_order_fk"),
-    db.removeColumn("order_status", "order_id")
+    db.removeForeignKey("orders", "orders_order_status_fk"),
+    db.removeColumn("orders", "order_status_id")
   )
 }
+
 
 exports._meta = {
   "version": 1

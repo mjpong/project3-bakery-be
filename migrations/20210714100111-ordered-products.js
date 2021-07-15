@@ -46,6 +46,10 @@ exports.up = function (db) {
         },
         mapping: 'id'
       }
+    },
+    quantity: {
+      "type": "int",
+      "unsigned": true,
     }
   });
 };
