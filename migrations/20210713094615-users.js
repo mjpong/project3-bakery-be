@@ -21,7 +21,7 @@ exports.up = function (db) {
       primaryKey: true,
       autoIncrement: true
     },
-    username: {
+    name: {
       type: "string",
       length: 45,
       notNull: false
