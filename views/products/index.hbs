@@ -6,239 +6,249 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-                <ul class="nav nav-tabs" id="myTab">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#cinnamon_rolls" data-toggle="tab">Cinnamon Rolls</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#flavors" data-toggle="tab">Flavors</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#toppings" data-toggle="tab">Toppings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#dough_types" data-toggle="tab">Dough Types</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#ingredients" data-toggle="tab">Ingredients</a>
-                    </li>
-                    
-                </ul>
-                <div class="tab-content my-tab">
-                    <div class="tab-pane active" id="cinnamon_rolls">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <h3>Cinnamon Rolls</h3>                                
-                            </div>
-                            <div class="col-md-3">
-                                <a class="nav-link" href="/products/create">Create New Roll</a>
-                            </div>
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#cinnamonrolls" data-toggle="tab">Cinnamon Rolls</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#flavors" data-toggle="tab">Flavors</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#toppings" data-toggle="tab">Toppings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#doughtypes" data-toggle="tab">Dough Types</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#ingredients" data-toggle="tab">Ingredients</a>
+                </li>
+
+            </ul>
+            <div class="tab-content my-tab">
+                <div class="tab-pane active" id="cinnamonrolls">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h3>Cinnamon Rolls</h3>
                         </div>
-                        <div class="row">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Cost</th>
-                                        <th>Description</th>
-                                        <th>Dough Type</th>
-                                        <th>Flavor</th>
-                                        <th>Toppings</th>
-                                        <th>Stock</th>
-                                        <th>Image</th>
-                                        <th>Update</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                        <div class="col-md-3">
+                            <a class="nav-link" href="/products/create">Create New Roll</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Cost</th>
+                                    <th>Description</th>
+                                    <th>Dough Type</th>
+                                    <th>Flavor</th>
+                                    <th>Toppings</th>
+                                    <th>Stock</th>
+                                    <th>Image</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 {{#each products}}
-                                    <tr>
-                                        <td>
-                                            {{this.id}}
-                                        </td>
-                                        <td>
-                                            {{this.name}}
-                                        </td>
-                                        <td>
-                                            {{this.cost}}
-                                        </td>
-                                        <td>
-                                            {{this.description}}
-                                        </td>
-                                        <td>
-                                            {{this.dough_type}}
-                                        </td>
-                                        <td>
-                                            {{this.flavor}}
-                                        </td>
-                                        <td>
-                                            {{this.topping}}
-                                        </td>
-                                        <td>
-                                            {{this.stock}}
-                                        </td>
-                                        <td>
-                                            {{this.image}}
-                                        </td>
-                                        <td>
-                                            <a href='/products/{{this.id}}/update' class="btn btn-primary btn-sm">Edit</a>
-                                            <a href='/products/{{this.id}}/delete' class="btn btn-danger btn-sm">Delete</a>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td>
+                                        {{this.id}}
+                                    </td>
+                                    <td>
+                                        {{this.name}}
+                                    </td>
+                                    <td>
+                                        {{this.cost}}
+                                    </td>
+                                    <td>
+                                        {{this.description}}
+                                    </td>
+                                    <td>
+                                        {{this.dough_type.name}}
+                                    </td>
+                                    <td>
+                                        {{this.flavor.name}}
+                                    </td>
+                                    <td>
+                                        {{#each this.toppings}}
+                                        <span>{{this.name}}</span>
+                                        {{/each}}
+                                    </td>
+                                    <td>
+                                        {{this.stock}}
+                                    </td>
+                                    <td>
+                                        {{this.image}}
+                                    </td>
+                                    <td>
+                                        <a href='/products/{{this.id}}/update' class="btn btn-primary btn-sm">Edit</a>
+                                        <a href='/products/{{this.id}}/delete' class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
                                 {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="flavors">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <h3>Flavors</h3>
-                            </div>
-                            <div class="col-md-3">
-                                <a class="nav-link" href="/products/flavors/create">Create New Flavor</a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Update</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {{#each flavors}}
-                                    <tr>
-                                        <td>
-                                            {{this.id}}
-                                        </td>
-                                        <td>
-                                            {{this.name}}
-                                        </td>
-                                        <td>
-                                            <a href='/products/flavors/{{this.id}}/update' class="btn btn-primary btn-sm">Edit</a>
-                                            <a href='/products/flavors/{{this.id}}/delete' class="btn btn-danger btn-sm">Delete</a>
-                                        </td>
-                                    </tr>
-                                {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="toppings">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <h3>Toppings</h3>
-                            </div>
-                            <div class="col-md-3">
-                                <a class="nav-link" href="/products/toppings/create">Create New Topping</a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Update</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {{#each toppings}}
-                                    <tr>
-                                        <td>
-                                            {{this.id}}
-                                        </td>
-                                        <td>
-                                            {{this.name}}
-                                        </td>
-                                        <td>
-                                            <a href='/products/toppings/{{this.id}}/update' class="btn btn-primary btn-sm">Edit</a>
-                                            <a href='/products/toppings/{{this.id}}/delete' class="btn btn-danger btn-sm">Delete</a>
-                                        </td>
-                                    </tr>
-                                {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="dough_types">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <h3>Dough Types</h3>
-                            </div>
-                            <div class="col-md-3">
-                                <a class="nav-link" href="/products/doughtypes/create">Create New Dough Type</a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Update</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {{#each doughtypes}}
-                                    <tr>
-                                        <td>
-                                            {{this.id}}
-                                        </td>
-                                        <td>
-                                            {{this.name}}
-                                        </td>
-                                        <td>
-                                            <a href='/products/doughtypes/{{this.id}}/update' class="btn btn-primary btn-sm">Edit</a>
-                                            <a href='/products/doughtypes/{{this.id}}/delete' class="btn btn-danger btn-sm">Delete</a>
-                                        </td>
-                                    </tr>
-                                {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="ingredients">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <h3>Ingredients</h3>
-                            </div>
-                            <div class="col-md-3">
-                                <a class="nav-link" href="/products/ingredients/create">Create New Ingredient</a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Update</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {{#each ingredients}}
-                                    <tr>
-                                        <td>
-                                            {{this.id}}
-                                        </td>
-                                        <td>
-                                            {{this.name}}
-                                        </td>
-                                        <td>
-                                            <a href='/products/ingredients/{{this.id}}/update' class="btn btn-primary btn-sm">Edit</a>
-                                            <a href='/products/ingredients/{{this.id}}/delete' class="btn btn-danger btn-sm">Delete</a>
-                                        </td>
-                                    </tr>
-                                {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+                <div class="tab-pane" id="flavors">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h3>Flavors</h3>
+                        </div>
+                        <div class="col-md-3">
+                            <a class="nav-link" href="/products/flavors/create">Create New Flavor</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each flavors}}
+                                <tr>
+                                    <td>
+                                        {{this.id}}
+                                    </td>
+                                    <td>
+                                        {{this.name}}
+                                    </td>
+                                    <td>
+                                        <a href='/products/flavors/{{this.id}}/update'
+                                            class="btn btn-primary btn-sm">Edit</a>
+                                        <a href='/products/flavors/{{this.id}}/delete'
+                                            class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane" id="toppings">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h3>Toppings</h3>
+                        </div>
+                        <div class="col-md-3">
+                            <a class="nav-link" href="/products/toppings/create">Create New Topping</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each toppings}}
+                                <tr>
+                                    <td>
+                                        {{this.id}}
+                                    </td>
+                                    <td>
+                                        {{this.name}}
+                                    </td>
+                                    <td>
+                                        <a href='/products/toppings/{{this.id}}/update'
+                                            class="btn btn-primary btn-sm">Edit</a>
+                                        <a href='/products/toppings/{{this.id}}/delete'
+                                            class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane" id="doughtypes">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h3>Dough Types</h3>
+                        </div>
+                        <div class="col-md-3">
+                            <a class="nav-link" href="/products/doughtypes/create">Create New Dough Type</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each doughtypes}}
+                                <tr>
+                                    <td>
+                                        {{this.id}}
+                                    </td>
+                                    <td>
+                                        {{this.name}}
+                                    </td>
+                                    <td>
+                                        <a href='/products/doughtypes/{{this.id}}/update'
+                                            class="btn btn-primary btn-sm">Edit</a>
+                                        <a href='/products/doughtypes/{{this.id}}/delete'
+                                            class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane" id="ingredients">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h3>Ingredients</h3>
+                        </div>
+                        <div class="col-md-3">
+                            <a class="nav-link" href="/products/ingredients/create">Create New Ingredient</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each ingredients}}
+                                <tr>
+                                    <td>
+                                        {{this.id}}
+                                    </td>
+                                    <td>
+                                        {{this.name}}
+                                    </td>
+                                    <td>
+                                        <a href='/products/ingredients/{{this.id}}/update'
+                                            class="btn btn-primary btn-sm">Edit</a>
+                                        <a href='/products/ingredients/{{this.id}}/delete'
+                                            class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -246,4 +256,15 @@
 
 {{/block}}
 
+{{#block "js"}}
+<script>
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    const tab = params.tab;
+
+    var triggerEl = document.querySelector(`a[href="#${tab}"]`)
+    $(triggerEl).tab('show');
+
+</script>
+{{/block}}
 {{/extends}}

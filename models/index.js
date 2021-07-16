@@ -19,27 +19,27 @@ const Flavor = bookshelf.model('Flavor', {
 
 const Ingredient = bookshelf.model('Ingredient', {
     tableName: 'ingredients',
-    dough_types(){
+    dough_types() {
         return this.hasMany("DoughType")
     }
 });
 
 const OrderStatus = bookshelf.model('OrderStatus', {
     tableName: 'order_status',
-    orders(){
+    orders() {
         return this.hasMany("Order")
     }
 });
 
 const Order = bookshelf.model('Order', {
     tableName: 'orders',
-    user(){
+    user() {
         return this.belongsTo("User")
     },
-    order_status(){
+    order_status() {
         return this.belongsTo("OrderStatus")
     },
-    products(){
+    products() {
         return this.hasMany("Product")
     }
 });
@@ -55,10 +55,10 @@ const Product = bookshelf.model('Product', {
     shopping_cart_items() {
         return this.hasMany("ShoppingCartItem")
     },
-    toppings(){
-        return this.hasMany("Topping")
+    toppings() {
+        return this.belongsToMany("Topping")
     },
-    orders(){
+    orders() {
         return this.hasMany("Order")
     }
 });
@@ -75,8 +75,8 @@ const ShoppingCartItem = bookshelf.model('ShoppingCartItem', {
 
 const Topping = bookshelf.model('Topping', {
     tableName: 'toppings',
-    products(){
-        return this.hasMany("Product")
+    products() {
+        return this.belongsToMany("Product")
     }
 });
 
@@ -85,7 +85,7 @@ const User = bookshelf.model('User', {
     shopping_cart_items() {
         return this.hasMany("ShoppingCartItem")
     },
-    orders(){
+    orders() {
         return this.hasMany("Order")
     }
 });

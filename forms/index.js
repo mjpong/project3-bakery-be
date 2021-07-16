@@ -69,7 +69,7 @@ const createIngredientForm = () => {
 
 // create dough type form
 const createDoughTypeForm = (ingredients) => {
-    console.log(ingredients);
+
     return forms.create({
         'name': fields.string({
             required: true,
@@ -79,7 +79,7 @@ const createDoughTypeForm = (ingredients) => {
             },
             validators: [validators.maxlength(100)]
         }),
-        'ingredients': fields.string({
+        'ingredient_id': fields.string({
             label: "Choose Ingredients Below:",
             required: true,
             errorAfterField: true,
@@ -95,7 +95,7 @@ const createDoughTypeForm = (ingredients) => {
 
 
 // create product form
-const createProductForm = (flavors, dough_types) => {
+const createProductForm = (flavors, dough_types, toppings) => {
     return forms.create({
         'name': fields.string({
             required: true,
@@ -146,7 +146,7 @@ const createProductForm = (flavors, dough_types) => {
             choices: flavors
         }),
         "dough_type_id": fields.string({
-            label: "DoughType",
+            label: "Dough Type",
             required: true,
             errorAfterField: true,
             cssClasses: {
@@ -154,7 +154,17 @@ const createProductForm = (flavors, dough_types) => {
             },
             widget: widgets.select(),
             choices: dough_types
-        })
+        }),
+        "toppings": fields.string({
+            label: "Toppings",
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            widget: widgets.multipleSelect(),
+            choices: toppings
+        }),
     })
 };
 

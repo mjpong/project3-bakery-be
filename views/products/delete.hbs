@@ -1,11 +1,11 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
-<h1>Deleting {{ingredient.name}}</h1>
+<h1>Deleting {{name}}</h1>
 
 <form method="POST">
     <div class="alert alert-danger">
-        <p>Are you sure you want to delete {{ingredient.name}}?</p>
+        <p>Are you sure you want to delete {{name}}?</p>
         <input type="submit" class="btn btn-danger" value="Yes" />
         <a href="/products" class="btn btn-success">No</a>
     </div>

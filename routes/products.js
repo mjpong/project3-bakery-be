@@ -22,12 +22,14 @@ const {
 
 //  #2 Add a new route to the Express router
 router.get('/', async(req, res) => {
-    let products = await Product.collection().fetch()
+    let products = await Product.collection().fetch({ withRelated: ['flavor', "dough_type", "toppings"] })
     let flavors = await Flavor.collection().fetch()
     let ingredients = await Ingredient.collection().fetch()
     let doughtypes = await DoughType.collection().fetch()
     let toppings = await Topping.collection().fetch()
+    console.log(products.toJSON()[0].toppings);
     res.render("products/index", {
+
         'products': products.toJSON(),
         'flavors': flavors.toJSON(),
         'ingredients': ingredients.toJSON(),
@@ -40,26 +42,46 @@ router.get('/', async(req, res) => {
 // PRODUCT
 // CREATE
 router.get('/create', async(req, res) => {
-    const productForm = createProductForm();
+    const allFlavors = await Flavor.fetchAll().map((flavor) => {
+        return [flavor.get('id'), flavor.get('name')];
+    })
+    const allDoughTypes = await DoughType.fetchAll().map((doughtype) => {
+        return [doughtype.get('id'), doughtype.get('name')];
+    })
+
+    const allToppings = await Topping.fetchAll().map((topping) => {
+        return [topping.get('id'), topping.get('name')];
+    })
+    const productForm = createProductForm(allFlavors, allDoughTypes, allToppings);
     res.render('products/create_product', {
         'form': productForm.toHTML(bootstrapField)
     })
 })
 
 router.post('/create', async(req, res) => {
-    const productForm = createProductForm();
+
+    const allFlavors = await Flavor.fetchAll().map((flavor) => {
+        return [flavor.get('id'), flavor.get('name')];
+    })
+    const allDoughTypes = await DoughType.fetchAll().map((doughtype) => {
+        return [doughtype.get('id'), doughtype.get('name')];
+    })
+    const allToppings = await Topping.fetchAll().map((topping) => {
+        return [topping.get('id'), topping.get('name')];
+    })
+
+    const productForm = createProductForm(allFlavors, allDoughTypes, allToppings);
     productForm.handle(req, {
         'success': async(form) => {
-            const product = new Product();
-            product.set('name', form.data.name);
-            product.set('cost', form.data.cost);
-            product.set('description', form.data.description);
-            product.set('stock', form.data.stock);
-            product.set('image', form.data.image);
-            product.set('flavor_id', form.data.flavor_id);
-            product.set('dough_type_id', form.data.dough_type_id)
+            let { toppings, ...productData } = form.data;
+            const product = new Product(productData);
             await product.save();
-            res.redirect('/products');
+            if (toppings) {
+                console.log(product.toppings())
+                await product.toppings().attach(toppings.split(","))
+            }
+
+            res.redirect('/products?tab=cinnamonrolls');
 
         },
         'error': async(form) => {
@@ -77,10 +99,20 @@ router.get('/:product_id/update', async(req, res) => {
     const product = await Product.where({
         'id': productId
     }).fetch({
-        require: true
+        require: true,
+        withRelated: ['toppings']
     });
+    const allFlavors = await Flavor.fetchAll().map((flavor) => {
+        return [flavor.get('id'), flavor.get('name')];
+    })
+    const allDoughTypes = await DoughType.fetchAll().map((doughtype) => {
+        return [doughtype.get('id'), doughtype.get('name')];
+    })
+    const allToppings = await Topping.fetchAll().map((topping) => {
+        return [topping.get('id'), topping.get('name')];
+    })
 
-    const productForm = createProductForm();
+    const productForm = createProductForm(allToppings, allDoughTypes, allFlavors);
 
     // fill in the existing values
     productForm.fields.name.value = product.get('name');
@@ -91,9 +123,12 @@ router.get('/:product_id/update', async(req, res) => {
     productForm.fields.flavor_id.value = product.get('flavor_id');
     productForm.fields.dough_type_id.value = product.get('dough_type_id');
 
+    let selectedToppings = await product.related('toppings').pluck('id');
+    productForm.fields.toppings.value = selectedToppings
+
     res.render('products/update_product', {
         'form': productForm.toHTML(bootstrapField),
-        'product': product.toJSON()
+        'product': product
     })
 
 })
@@ -104,16 +139,25 @@ router.post('/:product_id/update', async(req, res) => {
     const product = await Product.where({
         'id': req.params.product_id
     }).fetch({
-        require: true
+        require: true,
+        withRelated: ['toppings']
     });
 
     // process the form
     const productForm = createProductForm();
     productForm.handle(req, {
         'success': async(form) => {
-            product.set(form.data);
+            let { toppings, ...productData } = form.data;
+            product.set(productData);
             product.save();
-            res.redirect('/products');
+
+            let toppingIds = toppings.split(',');
+            let existingToppingIds = await product.related('toppings').pluck('id');
+            let remove = existingToppingIds.filter(id => toppingIds.includes(id) === false);
+            await product.toppings().detach(remove);
+            await product.toppings().attach(toppingIds);
+
+            res.redirect('/products?tab=cinnamonrolls');
         },
         'error': async(form) => {
             res.render('products/update_product', {
@@ -134,13 +178,14 @@ router.get('/flavors/create', async(req, res) => {
 })
 
 router.post('/flavors/create', async(req, res) => {
+
     const flavorForm = createFlavorForm();
     flavorForm.handle(req, {
         'success': async(form) => {
             const flavor = new Flavor();
             flavor.set('name', form.data.name);
             await flavor.save();
-            res.redirect('/products');
+            res.redirect('/products?tab=flavors');
         },
         'error': async(form) => {
             res.render("products/create_flavor", {
@@ -165,7 +210,7 @@ router.post('/toppings/create', async(req, res) => {
             const topping = new Topping();
             topping.set('name', form.data.name);
             await topping.save();
-            res.redirect('/products');
+            res.redirect('/products?tab=toppings');
         },
         'error': async(form) => {
             res.render("products/create_topping", {
@@ -199,7 +244,7 @@ router.post('/doughtypes/create', async(req, res) => {
             const doughtype = new DoughType();
             doughtype.set('name', form.data.name);
             await doughtype.save();
-            res.redirect('/products');
+            res.redirect('/products?tab=doughtypes');
         },
         'error': async(form) => {
             res.render("products/create_doughtype", {
@@ -256,7 +301,7 @@ router.post('/doughtypes/:dough_type_id/update', async(req, res) => {
         'success': async(form) => {
             doughtype.set(form.data);
             doughtype.save();
-            res.redirect('/products');
+            res.redirect('/products?tab=doughtypes');
         },
         'error': async(form) => {
             res.render('products/update_doughtype', {
@@ -330,7 +375,7 @@ router.post('/ingredients/:ingredient_id/update', async(req, res) => {
         'success': async(form) => {
             ingredient.set(form.data)
             ingredient.save();
-            res.redirect('/products');
+            res.redirect('/products?tab=ingredients');
         },
         'error': async(form) => {
             res.render('products/update_ingredient', {
@@ -350,9 +395,20 @@ router.get("/ingredients/:ingredient_id/delete", async(req, res) => {
         require: true
     });
 
-    res.render('products/delete_ingredient', {
-        'ingredient': ingredient.toJSON()
+    res.render('products/delete', {
+        'ingredient': ingredient.toJSON(),
+        'name': ingredient.get("name")
     })
+})
+
+router.post('/ingredients/:ingredient_id/delete', async(req, res) => {
+    const ingredient = await Ingredient.where({
+        'id': req.params.ingredient_id
+    }).fetch({
+        require: true
+    })
+    await ingredient.destroy();
+    res.redirect('/products?tab=ingredients')
 })
 
 // #3 export out the router
