@@ -22,5 +22,11 @@
    },
    "files.autoSave": "off",
    "workbench.colorTheme": "Visual Studio Dark",
-   "editor.defaultFormatter": "HookyQR.beautify"
+   "editor.defaultFormatter": "HookyQR.beautify",
+   "[javascript]": {
+      "editor.defaultFormatter": "lonefy.vscode-JS-CSS-HTML-formatter"
+   },
+   "[handlebars]": {
+      "editor.defaultFormatter": "vscode.html-language-features"
+   }
 }

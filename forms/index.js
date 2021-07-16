@@ -6,7 +6,7 @@ const widgets = forms.widgets;
 
 // forms boilerplate
 
-var bootstrapField = function (name, object) {
+var bootstrapField = function(name, object) {
     if (!Array.isArray(object.widget.classes)) {
         object.widget.classes = [];
     }
@@ -20,10 +20,8 @@ var bootstrapField = function (name, object) {
     if (validationclass) {
         object.widget.classes.push(validationclass);
     }
-
     var label = object.labelHTML(name);
     var error = object.error ? '<div class="invalid-feedback">' + object.error + '</div>' : '';
-
     var widget = object.widget.toHTML(name, object);
     return '<div class="form-group">' + label + widget + error + '</div>';
 };
@@ -44,18 +42,18 @@ const createFlavorForm = () => {
 
 // create topping form
 const createToppingForm = () => {
-    return forms.create({
-        'name': fields.string({
-            required: true,
-            errorAfterField: true,
-            cssClasses: {
-                label: ['form-label']
-            },
-            validators: [validators.maxlength(100)]
+        return forms.create({
+            'name': fields.string({
+                required: true,
+                errorAfterField: true,
+                cssClasses: {
+                    label: ['form-label']
+                },
+                validators: [validators.maxlength(100)]
+            })
         })
-    })
-}
-// create ingredients form
+    }
+    // create ingredients form
 const createIngredientForm = () => {
     return forms.create({
         'name': fields.string({
@@ -71,6 +69,7 @@ const createIngredientForm = () => {
 
 // create dough type form
 const createDoughTypeForm = (ingredients) => {
+    console.log(ingredients);
     return forms.create({
         'name': fields.string({
             required: true,
@@ -80,14 +79,14 @@ const createDoughTypeForm = (ingredients) => {
             },
             validators: [validators.maxlength(100)]
         }),
-        'ingredient_id': fields.string({
-            label: "Ingredient",
+        'ingredients': fields.string({
+            label: "Choose Ingredients Below:",
             required: true,
             errorAfterField: true,
             cssClasses: {
                 label: ['form-label']
             },
-            widget: widgets.select(),
+            widget: widgets.multipleCheckbox(),
             choices: ingredients
         }),
 
