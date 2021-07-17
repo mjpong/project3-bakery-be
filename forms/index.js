@@ -79,7 +79,7 @@ const createDoughTypeForm = (ingredients) => {
             },
             validators: [validators.maxlength(100)]
         }),
-        'ingredient_id': fields.string({
+        'ingredients': fields.string({
             label: "Choose Ingredients Below:",
             required: true,
             errorAfterField: true,

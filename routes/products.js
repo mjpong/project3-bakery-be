@@ -25,7 +25,7 @@ router.get('/', async(req, res) => {
     let products = await Product.collection().fetch({ withRelated: ['flavor', "dough_type", "toppings"] })
     let flavors = await Flavor.collection().fetch()
     let ingredients = await Ingredient.collection().fetch()
-    let doughtypes = await DoughType.collection().fetch()
+    let doughtypes = await DoughType.collection().fetch({ withRelated: ['ingredients'] })
     let toppings = await Topping.collection().fetch()
 
     res.render("products/index", {
@@ -395,26 +395,29 @@ router.post('/toppings/:topping_id/delete', async(req, res) => {
 
 // DOUGHTYPE CREATE 
 router.get('/doughtypes/create', async(req, res) => {
-    const allIngredients = await (await Ingredient.fetchAll()).map((ingredient) => {
-        return [ingredient.get('id'), ingredient.get('name')];
-    })
+
+    const allIngredients = await Ingredient.fetchAll().map(ingredient => [ingredient.get('id'), ingredient.get('name')])
 
     const doughTypeForm = createDoughTypeForm(allIngredients);
+
     res.render('products/create_doughtype', {
         'form': doughTypeForm.toHTML(bootstrapField)
     })
 })
 
 router.post('/doughtypes/create', async(req, res) => {
-    const allIngredients = await (await Ingredient.fetchAll()).map((ingredient) => {
+    const allIngredients = await Ingredient.fetchAll().map((ingredient) => {
         return [ingredient.get('id'), ingredient.get('name')];
     })
     const doughTypeForm = createDoughTypeForm(allIngredients);
     doughTypeForm.handle(req, {
         'success': async(form) => {
-            const doughtype = new DoughType();
-            doughtype.set('name', form.data.name);
+            let { ingredients, ...doughTypeData } = form.data;
+            const doughtype = new DoughType(doughTypeData);
             await doughtype.save();
+            if (ingredients) {
+                await doughtype.ingredients().attach(ingredients.split(','))
+            }
             res.redirect('/products?tab=doughtypes');
         },
         'error': async(form) => {
@@ -432,22 +435,23 @@ router.get('/doughtypes/:dough_type_id/update', async(req, res) => {
     const doughtype = await DoughType.where({
         'id': doughtypeId
     }).fetch({
-        require: true
+        require: true,
+        withRelated: ['ingredients']
     });
 
     // fetch all the categories
-    const allIngredients = await Ingredient.fetchAll().map((ingredient) => {
-        return [ingredient.get('id'), ingredient.get('name')];
-    })
+    const allIngredients = await Ingredient.fetchAll().map(ingredient => [ingredient.get('id'), ingredient.get('name')])
 
-    const doughtypeForm = createDoughTypeForm(allIngredients);
+    const doughTypeForm = createDoughTypeForm(allIngredients);
 
     // fill in the existing values
-    doughtypeForm.fields.name.value = doughtype.get('name');
-    doughtypeForm.fields.ingredient_id.value = doughtype.get('ingredient_id');
+    doughTypeForm.fields.name.value = doughtype.get('name');
+    let selectIngredients = await doughtype.related('ingredients').pluck('id');
+    doughTypeForm.fields.ingredients.value = selectIngredients
+
 
     res.render('products/update_item', {
-        'form': doughtypeForm.toHTML(bootstrapField),
+        'form': doughTypeForm.toHTML(bootstrapField),
         'doughtype': doughtype,
         'name': doughtype.get("name")
 
@@ -456,24 +460,26 @@ router.get('/doughtypes/:dough_type_id/update', async(req, res) => {
 })
 
 router.post('/doughtypes/:dough_type_id/update', async(req, res) => {
-    // fetch all the ingredients
-    const allIngredients = await Ingredient.fetchAll().map((ingredient) => {
-        return [ingredient.get('id'), ingredient.get('name')];
-    })
-
-    // fetch the product that we want to update
+    // fetch the doughtype that we want to update
     const doughtype = await DoughType.where({
         'id': req.params.dough_type_id
     }).fetch({
-        required: true
+        required: true,
+        withRelated: ['ingredients']
     });
 
     // process the form
-    const doughTypeForm = createDoughTypeForm(allIngredients);
+    const doughTypeForm = createDoughTypeForm();
     doughTypeForm.handle(req, {
         'success': async(form) => {
-            doughtype.set(form.data);
+            let { ingredients, ...doughTypeData } = form.data;
+            doughtype.set(doughTypeData);
             doughtype.save();
+            let ingredientIds = ingredients.split(',');
+            let existingIngredients = await doughtype.related('ingredients').pluck('id');
+            let toRemove = existingIngredients.filter(id => ingredientIds.includes(id) === false);
+            await doughtype.ingredients().detach(toRemove);
+            await doughtype.ingredients().attach(ingredientIds)
             res.redirect('/products?tab=doughtypes');
         },
         'error': async(form) => {
@@ -524,7 +530,7 @@ router.post('/ingredients/create', async(req, res) => {
             const ingredient = new Ingredient();
             ingredient.set('name', form.data.name);
             await ingredient.save();
-            res.redirect('/products');
+            res.redirect('/products?tab=ingredients');
         },
         'error': async(form) => {
             res.render("products/create_ingredient", {

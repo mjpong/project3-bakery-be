@@ -182,6 +182,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
+                                    <th>Ingredients</th>
                                     <th>Update</th>
                                 </tr>
                             </thead>
@@ -193,6 +194,11 @@
                                     </td>
                                     <td>
                                         {{this.name}}
+                                    </td>
+                                    <td>
+                                        {{#each this.ingredients}}
+                                        <span>{{this.name}}</span>
+                                        {{/each}}
                                     </td>
                                     <td>
                                         <a href='/products/doughtypes/{{this.id}}/update'
