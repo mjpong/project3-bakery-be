@@ -27,7 +27,7 @@ router.get('/', async(req, res) => {
     let ingredients = await Ingredient.collection().fetch()
     let doughtypes = await DoughType.collection().fetch()
     let toppings = await Topping.collection().fetch()
-    console.log(products.toJSON()[0].toppings);
+
     res.render("products/index", {
 
         'products': products.toJSON(),
@@ -77,7 +77,6 @@ router.post('/create', async(req, res) => {
             const product = new Product(productData);
             await product.save();
             if (toppings) {
-                console.log(product.toppings())
                 await product.toppings().attach(toppings.split(","))
             }
 
@@ -167,6 +166,31 @@ router.post('/:product_id/update', async(req, res) => {
         }
     })
 
+})
+
+//delete
+router.get('/:product_id/delete', async(req, res) => {
+    // fetch the product that we want to delete
+    const product = await Product.where({
+        'id': req.params.product_id
+    }).fetch({
+        require: true
+    });
+    res.render('products/delete', {
+        'product': product,
+        'name': product.get("name")
+    })
+});
+
+router.post('/:product_id/delete', async(req, res) => {
+    // fetch the product that we want to delete
+    const product = await Product.where({
+        'id': req.params.product_id
+    }).fetch({
+        require: true
+    });
+    await product.destroy();
+    res.redirect('/products')
 })
 
 // FLAVOR

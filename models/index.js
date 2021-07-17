@@ -6,7 +6,7 @@ const DoughType = bookshelf.model('DoughType', {
         return this.hasMany('Product');
     },
     ingredients() {
-        return this.hasMany("Ingredient")
+        return this.belongsToMany("Ingredient")
     }
 });
 
@@ -20,7 +20,7 @@ const Flavor = bookshelf.model('Flavor', {
 const Ingredient = bookshelf.model('Ingredient', {
     tableName: 'ingredients',
     dough_types() {
-        return this.hasMany("DoughType")
+        return this.belongsToMany("DoughType")
     }
 });
 
@@ -40,7 +40,7 @@ const Order = bookshelf.model('Order', {
         return this.belongsTo("OrderStatus")
     },
     products() {
-        return this.hasMany("Product")
+        return this.belongsToMany("Product")
     }
 });
 
@@ -59,7 +59,7 @@ const Product = bookshelf.model('Product', {
         return this.belongsToMany("Topping")
     },
     orders() {
-        return this.hasMany("Order")
+        return this.belongsToMany("Order")
     }
 });
 
