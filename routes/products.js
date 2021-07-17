@@ -269,6 +269,29 @@ router.post('/flavors/:flavor_id/update', async(req, res) => {
 })
 
 // FLAVOR DELETE
+router.get('/flavors/:flavor_id/delete', async(req, res) => {
+    // fetch the flavors to delete
+    const flavor = await Flavor.where({
+        'id': req.params.flavor_id
+    }).fetch({
+        require: true
+    });
+
+    res.render('products/delete', {
+        'flavor': flavor.toJSON(),
+        'name': flavor.get("name")
+    })
+})
+
+router.post('/flavors/:flavor_id/delete', async(req, res) => {
+    const flavor = await Flavor.where({
+        'id': req.params.flavor_id
+    }).fetch({
+        require: true
+    })
+    await flavor.destroy();
+    res.redirect('/products?tab=flavors')
+})
 
 // TOPPING CREATE
 router.get('/toppings/create', async(req, res) => {
@@ -296,9 +319,79 @@ router.post('/toppings/create', async(req, res) => {
 })
 
 // TOPPING UPDATE
+router.get('/toppings/:topping_id/update', async(req, res) => {
+    // retrieve the toppings
+    const toppingId = req.params.topping_id
+    const topping = await Topping.where({
+        'id': toppingId
+    }).fetch({
+        require: true
+    });
+
+    const toppingForm = createToppingForm();
+
+    // fill in the existing values
+    toppingForm.fields.name.value = topping.get('name');
+
+    res.render('products/update_item', {
+        'form': toppingForm.toHTML(bootstrapField),
+        'topping': topping.toJSON(),
+        'name': topping.get("name")
+    })
+
+})
+
+router.post('/toppings/:topping_id/update', async(req, res) => {
+    // get the topping to update
+    const toppingId = req.params.topping_id
+    const topping = await Topping.where({
+        'id': toppingId
+    }).fetch({
+        required: true
+    });
+
+    // process the form
+    const toppingForm = createToppingForm();
+    toppingForm.handle(req, {
+        'success': async(form) => {
+            topping.set(form.data)
+            topping.save();
+            res.redirect('/products?tab=toppings');
+        },
+        'error': async(form) => {
+            res.render('products/update_item', {
+                'form': form.toHTML(bootstrapField)
+            })
+        }
+    })
+
+})
+
 
 // TOPPING DELETE
+router.get('/toppings/:topping_id/delete', async(req, res) => {
+    // fetch the toppings to delete
+    const topping = await Topping.where({
+        'id': req.params.topping_id
+    }).fetch({
+        require: true
+    });
 
+    res.render('products/delete', {
+        'topping': topping.toJSON(),
+        'name': topping.get("name")
+    })
+})
+
+router.post('/toppings/:topping_id/delete', async(req, res) => {
+    const topping = await Topping.where({
+        'id': req.params.topping_id
+    }).fetch({
+        require: true
+    })
+    await topping.destroy();
+    res.redirect('/products?tab=toppings')
+})
 
 // DOUGHTYPE CREATE 
 router.get('/doughtypes/create', async(req, res) => {
@@ -443,7 +536,7 @@ router.post('/ingredients/create', async(req, res) => {
 
 // INGREDIENTS UPDATE 
 router.get('/ingredients/:ingredient_id/update', async(req, res) => {
-    // retrieve the product
+    // retrieve the ingredients
     const ingredientId = req.params.ingredient_id
     const ingredient = await Ingredient.where({
         'id': ingredientId
@@ -482,7 +575,7 @@ router.post('/ingredients/:ingredient_id/update', async(req, res) => {
             res.redirect('/products?tab=ingredients');
         },
         'error': async(form) => {
-            res.render('products/update_ingredient', {
+            res.render('products/update_item', {
                 'form': form.toHTML(bootstrapField)
             })
         }
