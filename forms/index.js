@@ -42,18 +42,19 @@ const createFlavorForm = () => {
 
 // create topping form
 const createToppingForm = () => {
-        return forms.create({
-            'name': fields.string({
-                required: true,
-                errorAfterField: true,
-                cssClasses: {
-                    label: ['form-label']
-                },
-                validators: [validators.maxlength(100)]
-            })
+    return forms.create({
+        'name': fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            validators: [validators.maxlength(100)]
         })
-    }
-    // create ingredients form
+    })
+}
+
+// create ingredients form
 const createIngredientForm = () => {
     return forms.create({
         'name': fields.string({
@@ -204,13 +205,77 @@ const createUserForm = () => {
             validators: [validators.matchField("password")]
         }),
         "dob": fields.date({
-            label: "DOB",
+            label: "Date of Birth",
             required: true,
             errorAfterField: true,
             cssClasses: {
                 label: ["form-label"]
             },
-            widget: widget.date(),
+            widget: widgets.date(),
+        }),
+        "phone": fields.number({
+            label: "Contact Number",
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            validators: [validators.maxlength(45)]
+        }),
+        "address": fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            validators: [validators.maxlength(255)]
+        })
+    })
+}
+
+const createUpdateUserForm = () => {
+    return forms.create({
+        "name": fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            validators: [validators.maxlength(45)]
+        }),
+        "email": fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            validators: [validators.email(), validators.maxlength(255)]
+        }),
+        "password": fields.password({
+            label: "New Password",
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            validators: [validators.maxlength(32)]
+        }),
+        "confirm_password": fields.password({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            validators: [validators.matchField("password")]
+        }),
+        "dob": fields.date({
+            label: "Date of Birth",
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            widget: widgets.date(),
         }),
         "phone": fields.number({
             label: "Contact Number",
@@ -252,6 +317,47 @@ const createLoginForm = () => {
     })
 }
 
+//search forms 
+const createSearchForm = (flavors, toppings, dough_types) => {
+    return forms.create({
+        "name": fields.string({
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            validators: [validators.maxlength(100)]
+        }),
+        "flavor_id": fields.string({
+            label: "Flavor",
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            widget: widgets.select(),
+            choices: flavors
+        }),
+        "dough_type_id": fields.string({
+            label: "Dough Type",
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            widget: widgets.select(),
+            choices: dough_types
+        }),
+        "toppings": fields.string({
+            label: "Toppings",
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            widget: widgets.multipleSelect(),
+            choices: toppings
+        }),
+
+    })
+}
+
 
 module.exports = {
     createFlavorForm,
@@ -260,6 +366,8 @@ module.exports = {
     createIngredientForm,
     createDoughTypeForm,
     createUserForm,
+    createUpdateUserForm,
     createLoginForm,
+    createSearchForm,
     bootstrapField
 };

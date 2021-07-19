@@ -2,6 +2,10 @@ const express = require("express");
 const hbs = require("hbs");
 const wax = require("wax-on");
 require("dotenv").config();
+const session = require("express-session")
+const flash = require("connect-flash")
+const csurf = require("csurf")
+const cors = require("cors")
 
 // create an instance of express app
 let app = express();
@@ -22,6 +26,23 @@ app.use(
         extended: false
     })
 );
+
+// setup sessions
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+}))
+
+// setup flash
+app.use(flash())
+
+// setup global middleware
+app.use(function(req, res, next) {
+    res.locals.success_msg = req.flash("success_message")
+    res.locals.error_msg = req.flash("error_message")
+    next()
+})
 
 const landingRoutes = require('./routes/landing')
 const productRoutes = require("./routes/products")
