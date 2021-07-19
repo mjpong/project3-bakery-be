@@ -49,6 +49,11 @@ const getIngredientById = async(ingredientId) => {
     });
 }
 
+
+const getAllProducts = async() => {
+    return await Product.fetchAll()
+}
+
 const getAllFlavors = async() => {
     return await Flavor.fetchAll().map((flavor) => {
         return [flavor.get('id'), flavor.get('name')];
@@ -79,6 +84,7 @@ module.exports = {
     getFlavorById,
     getDoughTypeById,
     getIngredientById,
+    getAllProducts,
     getAllFlavors,
     getAllToppings,
     getAllDoughTypes,
