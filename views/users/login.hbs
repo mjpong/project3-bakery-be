@@ -1,6 +1,5 @@
 {{#extends "base"}}
-{{#block "title"}}
-{{/block}}
+
 {{#block "content"}}
 
 <div class="register-form">
@@ -8,10 +7,10 @@
     <form method="POST" style="width:100%">
         {{{form}}}
         <div style="display:flex">
-            <input type="submit" value="Sign In">
+            <input type="submit" value="Login" class="btn btn-primary">
         </div>
     </form>
-    <a href="/users/register" class="create-acc">No account? Create a new account here</a>
+    <a href="/users/register" class="create-account">No account? Create a new account here</a>
 </div>
 
 

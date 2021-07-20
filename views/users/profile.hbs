@@ -1,7 +1,17 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
-<h1>Welcome to the Users Profile Page</h1>
+<h1>{{user.name}} - Profile Page</h1>
+<div>
+    <a href="/users/update">Update Profile</a>
+</div>
+<ul>
+    <li>Name: {{user.name}}</li>
+    <li>Email: {{user.email}}</li> 
+    <li>Phone: {{user.phone}}</li>
+    <li>Date of Birth: {{user.dob}}</li>
+    <li>Address: {{user.address}}</li>
+</ul>
 {{/block}}
 
 {{/extends}}

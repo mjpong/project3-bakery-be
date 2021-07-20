@@ -69,12 +69,14 @@ router.post('/create', async(req, res) => {
             if (toppings) {
                 await product.toppings().attach(toppings.split(","))
             }
+            req.flash("success_message", `${product.get('name')} has been created`)
             res.redirect('/products?tab=cinnamonrolls');
         },
         'error': async(form) => {
             res.render("products/create_product", {
                 'form': form.toHTML(bootstrapField)
             })
+            res.flash("error_message", 'Error, Cinnamon Roll cannot be created')
         }
     })
 })
@@ -127,6 +129,7 @@ router.post('/:product_id/update', async(req, res) => {
             let remove = existingToppingIds.filter(id => toppingIds.includes(id) === false);
             await product.toppings().detach(remove);
             await product.toppings().attach(toppingIds);
+            req.flash("success_message", `${product.get('name')} has been updated`)
 
             res.redirect('/products?tab=cinnamonrolls');
         },
@@ -135,6 +138,7 @@ router.post('/:product_id/update', async(req, res) => {
                 'form': form.toHTML(bootstrapField),
                 'product': product.toJSON()
             })
+            res.flash("error_message", 'Error, Cinnamon Roll cannot be updated')
         }
     })
 
@@ -156,6 +160,7 @@ router.post('/:product_id/delete', async(req, res) => {
     const productId = req.params.product_id
     const product = await dataLayer.getProductById(productId)
     await product.destroy();
+    req.flash("success_message", `Cinnamon Roll deleted`)
     res.redirect('/products')
 })
 
@@ -175,12 +180,14 @@ router.post('/flavors/create', async(req, res) => {
             const flavor = new Flavor();
             flavor.set('name', form.data.name);
             await flavor.save();
+            req.flash("success_message", `${flavor.get('name')} has been created`)
             res.redirect('/products?tab=flavors');
         },
         'error': async(form) => {
             res.render("products/create_flavor", {
                 'form': form.toHTML(bootstrapField)
             })
+            res.flash("error_message", 'Error, flavor cannot be created')
         }
     })
 })
@@ -216,12 +223,14 @@ router.post('/flavors/:flavor_id/update', async(req, res) => {
         'success': async(form) => {
             flavor.set(form.data);
             flavor.save();
+            req.flash("success_message", `${flavor.get('name')} has been created`)
             res.redirect('/products?tab=flavors');
         },
         'error': async(form) => {
             res.render('products/update_item', {
                 'form': form.toHTML(bootstrapField)
             })
+            res.flash("error_message", 'Error, flavor cannot be updated')
         }
     })
 })
@@ -242,6 +251,7 @@ router.post('/flavors/:flavor_id/delete', async(req, res) => {
     const flavorId = req.params.flavor_id
     const flavor = await dataLayer.getFlavorById(flavorId)
     await flavor.destroy();
+    req.flash("success_message", `Flavor has been deleted`)
     res.redirect('/products?tab=flavors')
 })
 
@@ -260,12 +270,14 @@ router.post('/toppings/create', async(req, res) => {
             const topping = new Topping();
             topping.set('name', form.data.name);
             await topping.save();
+            req.flash("success_message", `${topping.get('name')} has been created`)
             res.redirect('/products?tab=toppings');
         },
         'error': async(form) => {
             res.render("products/create_topping", {
                 'form': form.toHTML(bootstrapField)
             })
+            res.flash("error_message", 'Error, topping cannot be created')
         }
     })
 })
@@ -300,12 +312,14 @@ router.post('/toppings/:topping_id/update', async(req, res) => {
         'success': async(form) => {
             topping.set(form.data)
             topping.save();
+            req.flash("success_message", `${topping.get('name')} has been updated`)
             res.redirect('/products?tab=toppings');
         },
         'error': async(form) => {
             res.render('products/update_item', {
                 'form': form.toHTML(bootstrapField)
             })
+            res.flash("error_message", 'Error, topping cannot be updated')
         }
     })
 
@@ -328,6 +342,7 @@ router.post('/toppings/:topping_id/delete', async(req, res) => {
     const toppingId = req.params.topping_id
     const topping = await dataLayer.getToppingById(toppingId)
     await topping.destroy();
+    req.flash("success_message", `Topping has been deleted`)
     res.redirect('/products?tab=toppings')
 })
 
@@ -353,12 +368,14 @@ router.post('/doughtypes/create', async(req, res) => {
             if (ingredients) {
                 await doughtype.ingredients().attach(ingredients.split(','))
             }
+            req.flash("success_message", `${doughtype.get('name')} has been created`)
             res.redirect('/products?tab=doughtypes');
         },
         'error': async(form) => {
             res.render("products/create_doughtype", {
                 'form': form.toHTML(bootstrapField)
             })
+            res.flash("error_message", 'Error, dough type cannot be created')
         }
     })
 })
@@ -383,7 +400,6 @@ router.get('/doughtypes/:dough_type_id/update', async(req, res) => {
         'form': doughTypeForm.toHTML(bootstrapField),
         'doughtype': doughtype,
         'name': doughtype.get("name")
-
     })
 
 })
@@ -405,12 +421,14 @@ router.post('/doughtypes/:dough_type_id/update', async(req, res) => {
             let toRemove = existingIngredients.filter(id => ingredientIds.includes(id) === false);
             await doughtype.ingredients().detach(toRemove);
             await doughtype.ingredients().attach(ingredientIds)
+            req.flash("success_message", `${doughtype.get('name')} has been updated`)
             res.redirect('/products?tab=doughtypes');
         },
         'error': async(form) => {
             res.render('products/update_doughtype', {
                 'form': form.toHTML(bootstrapField)
             })
+            res.flash("error_message", 'Error, dough type cannot be updated')
         }
     })
 })
@@ -431,6 +449,7 @@ router.post("/doughtypes/:dough_type_id/delete", async(req, res) => {
     const doughtypeId = req.params.dough_type_id
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
     await doughtype.destroy();
+    req.flash("success_message", `Dough Type has been deleted`)
     res.redirect('/products?tab=doughtypes')
 })
 
@@ -449,12 +468,14 @@ router.post('/ingredients/create', async(req, res) => {
             const ingredient = new Ingredient();
             ingredient.set('name', form.data.name);
             await ingredient.save();
+            req.flash("success_message", `${ingredient.get('name')} has been created`)
             res.redirect('/products?tab=ingredients');
         },
         'error': async(form) => {
             res.render("products/create_ingredient", {
                 'form': form.toHTML(bootstrapField)
             })
+            res.flash("error_message", 'Error, ingredient cannot be created')
         }
     })
 })
@@ -489,12 +510,14 @@ router.post('/ingredients/:ingredient_id/update', async(req, res) => {
         'success': async(form) => {
             ingredient.set(form.data)
             ingredient.save();
+            req.flash("success_message", `${ingredient.get('name')} has been updated`)
             res.redirect('/products?tab=ingredients');
         },
         'error': async(form) => {
             res.render('products/update_item', {
                 'form': form.toHTML(bootstrapField)
             })
+            res.flash("error_message", 'Error, ingredient cannot be updated')
         }
     })
 
@@ -516,6 +539,7 @@ router.post('/ingredients/:ingredient_id/delete', async(req, res) => {
     const ingredientId = req.params.ingredient_id
     const ingredient = await dataLayer.getIngredientById(ingredientId)
     await ingredient.destroy();
+    req.flash("success_message", `Ingredient has been deleted`)
     res.redirect('/products?tab=ingredients')
 })
 

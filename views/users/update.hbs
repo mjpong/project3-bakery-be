@@ -1,0 +1,18 @@
+{{#extends "base"}}
+{{#block "title"}}
+{{/block}}
+
+{{#block "content"}}
+
+<div class="update-form">
+    <h3 style="text-align: center">Update Profile </h3>
+    <form method="POST" style="width:100%">
+
+        {{{form}}}
+        <div>
+            <input type="submit" class="btn btn-primary" value="Update">
+        </div>
+    </form>
+</div>
+{{/block}}
+{{/extends}}
