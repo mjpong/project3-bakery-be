@@ -30,9 +30,6 @@ app.use(
 // enable cors 
 app.use(cors());
 
-// enable csrf
-app.use(csrf());
-
 // setup sessions
 app.use(session({
     secret: process.env.SESSION_SECRET_KEY,
@@ -54,6 +51,16 @@ app.use(function(req, res, next) {
 app.use(function(req, res, next) {
     res.locals.user = req.session.user;
     next()
+})
+
+// enable csrf
+const csrfInstance = csrf();
+app.use(function (req,res,next) {
+    // exclude api from csrf
+    if (req.url.slice(0,5)=="/api/") {
+        return next()
+    }
+    csrfInstance(req,res,next)
 })
 
 //share csrf with hbs files 
@@ -85,6 +92,6 @@ async function main() {
 
 main();
 
-app.listen(3000, () => {
+app.listen(8000, () => {
     console.log("Server has started");
 });
