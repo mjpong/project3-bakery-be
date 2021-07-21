@@ -12,7 +12,7 @@ const getProductById = async(productId) => {
         'id': parseInt(productId)
     }).fetch({
         require: true,
-        withRelated: ['toppings']
+        withRelated: ['toppings', "dough_type", "flavor", "dough_type.ingredients"]
     });
 }
 
