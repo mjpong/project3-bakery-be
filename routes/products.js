@@ -23,6 +23,9 @@ const {
 // import in DAL
 const dataLayer = require('../dal/products')
 
+// inport middleware
+const { checkIfAuth } = require('../middleware')
+
 //  #2 Add a new route to the Express router
 router.get('/', async(req, res) => {
     let products = await Product.collection().fetch({ withRelated: ['flavor', "dough_type", "toppings"] })
@@ -43,7 +46,7 @@ router.get('/', async(req, res) => {
 })
 
 // PRODUCT CREATE
-router.get('/create', async(req, res) => {
+router.get('/create', checkIfAuth, async(req, res) => {
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()
     const allToppings = await dataLayer.getAllToppings()
@@ -54,7 +57,7 @@ router.get('/create', async(req, res) => {
     })
 })
 
-router.post('/create', async(req, res) => {
+router.post('/create', checkIfAuth, async(req, res) => {
 
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()

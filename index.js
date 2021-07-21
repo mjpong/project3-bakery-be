@@ -4,7 +4,7 @@ const wax = require("wax-on");
 require("dotenv").config();
 const session = require("express-session")
 const flash = require("connect-flash")
-const csurf = require("csurf")
+const csrf = require("csurf")
 const cors = require("cors")
 
 // create an instance of express app
@@ -27,9 +27,15 @@ app.use(
     })
 );
 
+// enable cors 
+app.use(cors());
+
+// enable csrf
+app.use(csrf());
+
 // setup sessions
 app.use(session({
-    secret: 'keyboard cat',
+    secret: process.env.SESSION_SECRET_KEY,
     resave: false,
     saveUninitialized: true
 }))
@@ -44,12 +50,27 @@ app.use(function(req, res, next) {
     next()
 })
 
+// global middleware for hbs sessions
+app.use(function(req, res, next) {
+    res.locals.user = req.session.user;
+    next()
+})
+
+//share csrf with hbs files 
+app.use(function(req, res, next) {
+    if (req.csrfToken) {
+        res.locals.csrfToken = req.csrfToken();
+    }
+    next()
+})
+
 const landingRoutes = require('./routes/landing')
 const productRoutes = require("./routes/products")
 const userRoutes = require("./routes/users")
 const orderRoutes = require("./routes/orders")
 const api = {
-    products: require('./routes/api/products')
+    products: require('./routes/api/products'),
+    users: require("./routes/api/users")
 }
 
 async function main() {
@@ -58,6 +79,7 @@ async function main() {
     app.use("/users", userRoutes)
     app.use("/orders", orderRoutes)
     app.use('/api/products', express.json(), api.products)
+    app.use('/api/users', express.json(), api.users)
 
 }
 

@@ -6,6 +6,7 @@
 <div class="register-form">
     <h3 style="text-align: center;">Create New Account </h3>
     <form method="POST" style="width:100%">
+        <input type="hidden" name="_csrf" value="{{crsfToken}}"/>
         {{{form}}}
         <div style="display:flex">
             <input type="submit" value="Register" class="btn btn-primary">
