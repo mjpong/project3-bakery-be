@@ -24,7 +24,7 @@
    "workbench.colorTheme": "Visual Studio Dark",
    "editor.defaultFormatter": "HookyQR.beautify",
    "[javascript]": {
-      "editor.defaultFormatter": "lonefy.vscode-JS-CSS-HTML-formatter"
+      "editor.defaultFormatter": "vscode.typescript-language-features"
    },
    "[handlebars]": {
       "editor.defaultFormatter": "vscode.html-language-features"

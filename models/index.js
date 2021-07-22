@@ -63,6 +63,16 @@ const Product = bookshelf.model('Product', {
     }
 });
 
+const OrderedProduct = bookshelf.model('OrderedProduct', {
+    tableName: "orders_products",
+    order() {
+        return this.belongsTo('Order')
+    },
+    product() {
+        return this.belongsTo('Product')
+    }
+})
+
 const ShoppingCartItem = bookshelf.model('ShoppingCartItem', {
     tableName: 'shopping_cart_item',
     product() {
@@ -102,6 +112,7 @@ module.exports = {
     OrderStatus,
     Order,
     Product,
+    OrderedProduct,
     ShoppingCartItem,
     Topping,
     User,

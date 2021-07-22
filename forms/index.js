@@ -358,6 +358,21 @@ const createSearchForm = (flavors, toppings, dough_types) => {
     })
 }
 
+const createOrderUpdateForm = (status) => {
+    return forms.create({
+        "status_id": fields.string({
+            label: "Status",
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"]
+            },
+            widget: widgets.select(),
+            choices: status
+        })
+    })
+}
+
 
 module.exports = {
     createFlavorForm,
@@ -369,5 +384,6 @@ module.exports = {
     createUpdateUserForm,
     createLoginForm,
     createSearchForm,
+    createOrderUpdateForm,
     bootstrapField
 };

@@ -7,7 +7,7 @@ const {
     Topping
 } = require("../models")
 
-const getProductById = async(productId) => {
+const getProductById = async (productId) => {
     return await Product.where({
         'id': parseInt(productId)
     }).fetch({
@@ -16,7 +16,7 @@ const getProductById = async(productId) => {
     });
 }
 
-const getFlavorById = async(flavorId) => {
+const getFlavorById = async (flavorId) => {
     return await Flavor.where({
         'id': parseInt(flavorId)
     }).fetch({
@@ -24,7 +24,7 @@ const getFlavorById = async(flavorId) => {
     });
 }
 
-const getToppingById = async(toppingId) => {
+const getToppingById = async (toppingId) => {
     return await Topping.where({
         'id': parseInt(toppingId)
     }).fetch({
@@ -32,7 +32,7 @@ const getToppingById = async(toppingId) => {
     });
 }
 
-const getDoughTypeById = async(doughtypeId) => {
+const getDoughTypeById = async (doughtypeId) => {
     return await DoughType.where({
         'id': parseInt(doughtypeId)
     }).fetch({
@@ -41,7 +41,7 @@ const getDoughTypeById = async(doughtypeId) => {
     });
 }
 
-const getIngredientById = async(ingredientId) => {
+const getIngredientById = async (ingredientId) => {
     return await Ingredient.where({
         'id': parseInt(ingredientId)
     }).fetch({
@@ -50,29 +50,29 @@ const getIngredientById = async(ingredientId) => {
 }
 
 
-const getAllProducts = async() => {
+const getAllProducts = async () => {
     return await Product.fetchAll()
 }
 
-const getAllFlavors = async() => {
+const getAllFlavors = async () => {
     return await Flavor.fetchAll().map((flavor) => {
         return [flavor.get('id'), flavor.get('name')];
     })
 }
 
-const getAllToppings = async() => {
+const getAllToppings = async () => {
     return await Topping.fetchAll().map((topping) => {
         return [topping.get('id'), topping.get('name')];
     })
 }
 
-const getAllDoughTypes = async() => {
+const getAllDoughTypes = async () => {
     return await DoughType.fetchAll().map((doughtype) => {
         return [doughtype.get('id'), doughtype.get('name')];
     })
 }
 
-const getAllIngredients = async() => {
+const getAllIngredients = async () => {
     return await Ingredient.fetchAll().map(ingredient => {
         return [ingredient.get('id'), ingredient.get('name')]
     })
