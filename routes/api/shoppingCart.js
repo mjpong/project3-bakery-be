@@ -5,9 +5,11 @@ const CartServices = require('../../services/CartServices')
 
 //get
 router.get('/:user_id', async(req,res)=> {
-    let cart = new CartServices(req.params.user.id);
+    let cart = new CartServices(req.params.user_id);
     try {
+        console.log(cart);
         const cartItems = await cart.getAll()
+        console.log(cartItems);
         res.send(cartItems.toJSON())
     } catch (e) {
         res.send("Unable to get items")
@@ -15,8 +17,8 @@ router.get('/:user_id', async(req,res)=> {
 })
 
 //add
-router.get("/:user_id/:product_id/add", async(req,res) => {
-    let cart = new CartServices(req.params.user.id);
+router.post("/:user_id/:product_id/add", async(req,res) => {
+    let cart = new CartServices(req.params.user_id);
     try {
         await cart.addToCart(req.params.product_id)
         res.send("Item has been added to cart")
@@ -27,7 +29,7 @@ router.get("/:user_id/:product_id/add", async(req,res) => {
 
 //update
 router.post('/:user_id/:product_id/update', async(req,res) => {
-    let cart = new CartServices(req.params.user.id);
+    let cart = new CartServices(req.params.user_id);
     try{
         await cart.updateQuantity(req.params.tea_id, req.body.quantity)
         res.send('Item quantity updated')

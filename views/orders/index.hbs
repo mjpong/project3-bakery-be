@@ -2,6 +2,16 @@
 
 {{#block 'content'}}
 <h1>Welcome to the Orders Page</h1>
+<tr>
+    <th>ID</th>
+    <th>Order Status</th>
+</tr>
+{{#each orders}}
+<tr>
+    <td>{{this.id}}</td>
+
+</tr>
+{{/each}}
 {{/block}}
 
 {{/extends}}

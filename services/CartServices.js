@@ -1,4 +1,4 @@
-const {ShoppingCartItem} = require('../models');
+const {ShoppingCartItem, Product} = require('../models');
 const dataLayer = require('../dal/shoppingCart');
 
 class CartServices {
@@ -12,16 +12,21 @@ class CartServices {
 
     async addToCart(productId) {
         const cartItem = await dataLayer.getItemByUserAndProduct(this.user_id, productId)
-        if (!cartItem) {
-            cartItem = new ShoppingCartItem({
+        console.log(cartItem);
+        // test value
+        let quantity = 1;
+
+        if (cartItem == null) {
+            cartItem = await new ShoppingCartItem({
                 'user_id': this.user_id,
                 'product_id': productId,
                 'quantity': quantity
-            })
+            }).save();
         } else {
             cartItem.set('quantity', cartItem.get('quantity') + quantity)
+            await cartItem.save();
         }
-        await cartItem.save();
+        // await cartItem.save();
         return cartItem
     }
 
