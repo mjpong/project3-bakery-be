@@ -1,7 +1,7 @@
 const {ShoppingCartItem, Product} = require("../models")
 
 const getAllItems = async(userId) => {
-    console.log(userId);
+
     return await ShoppingCartItem.collection().where({
         "user_id": userId
     }).fetch({

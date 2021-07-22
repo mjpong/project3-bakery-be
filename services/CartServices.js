@@ -12,7 +12,7 @@ class CartServices {
 
     async addToCart(productId) {
         const cartItem = await dataLayer.getItemByUserAndProduct(this.user_id, productId)
-        console.log(cartItem);
+
         // test value
         let quantity = 1;
 

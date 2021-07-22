@@ -40,6 +40,7 @@ router.post('/register', (req, res) => {
                 let { confirm_password, ...userData } = form.data
                 userData.password = getHash(userData.password)
                 const user = new User(userData)
+                user.set("role", 2);
                 await user.save();
                 req.flash("success_message", "New user has been created. ")
                 res.redirect("/users/login")
@@ -67,7 +68,8 @@ router.post('/login', async(req, res) => {
     loginForm.handle(req, {
         'success': async(form) => {
             let user = await User.where({
-                    "email": form.data.email
+                    "email": form.data.email,
+                    "role":2
                 }).fetch({
                     require: false
                 })

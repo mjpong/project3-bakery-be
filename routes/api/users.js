@@ -24,7 +24,8 @@ const getHash = (password) => {
 
 router.post('/login', async(req, res) => {
     let user = await User.where({
-        'email': req.body.email
+        'email': req.body.email,
+        "role": 1
     }).fetch({
         require: false
     });
@@ -116,11 +117,14 @@ router.post("/logout", async (req, res) => {
 })
 
 router.post("/register", async(req,res) => {
-    let checkEmail = await User.where ({
+    if(req.body.password !== req.body.confirmPassword){
+        res.send("Unable to create user");
+    }
+
+    let checkEmail = await User.where({
         "email": req.body.email
-    }).fetch({
-        require: false
-    })
+    }).fetch({require: false});
+    
     if (checkEmail) {
         res.send("Email already in use")
     } else {
@@ -132,8 +136,11 @@ router.post("/register", async(req,res) => {
             user.set('address', req.body.address)
             user.set('phone', req.body.phone)
             user.set("dob", req.body.dob)
+            user.set("role", 1);
             await user.save()
+            res.send(user);
         } catch (e) {
+            console.log(e)
             res.send("Unable to create user")
         }
     }

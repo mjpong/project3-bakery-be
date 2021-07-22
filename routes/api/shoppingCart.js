@@ -7,9 +7,8 @@ const CartServices = require('../../services/CartServices')
 router.get('/:user_id', async(req,res)=> {
     let cart = new CartServices(req.params.user_id);
     try {
-        console.log(cart);
         const cartItems = await cart.getAll()
-        console.log(cartItems);
+
         res.send(cartItems.toJSON())
     } catch (e) {
         res.send("Unable to get items")
