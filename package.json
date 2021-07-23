@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/mjpong/project3-bakery-be#readme",
   "dependencies": {
+    "@stripe/react-stripe-js": "^1.4.1",
+    "@stripe/stripe-js": "^1.16.0",
     "bookshelf": "^1.2.0",
     "connect-flash": "^0.1.1",
     "cors": "^2.8.5",
@@ -32,6 +34,7 @@
     "hbs": "^4.1.2",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.7",
+    "stripe": "^8.165.0",
     "stripes": "^0.0.82",
     "wax-on": "^1.2.2"
   }

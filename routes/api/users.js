@@ -48,7 +48,10 @@ router.post('/login', async(req, res) => {
 })
 
 router.get('/profile', checkIfAuthJWT, async(req, res) => {
-    let user = req.user
+    let user = await User.where({
+        'id': req.user.id
+    }).fetch({
+        require: true });
     res.send(user)
 })
 

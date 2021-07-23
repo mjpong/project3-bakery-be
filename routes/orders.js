@@ -22,10 +22,16 @@ router.get('/', async (req, res) => {
 
 // get specific order by id
 router.get("/:order_id", async (req,res) => {
-    const order = await dataLayer.getOrderById(req.params.order_id).toJSON()
-    const allOrderStatus = dataLayer.getAllOrderStatus()
+    const orderId = req.params.order_id
+    const getOrderById = await dataLayer.getOrderById(orderId)
+    res.send(getOrderById)
+    
+})
 
-
+router.post('/:order_id', async (req,res) => {
+    const orderId = req.params.order_id
+    const order = await dataLayer.getOrderById(orderId)
+    const allOrderStatus = await dataLayer.getAllOrderStatus
     
 })
 
