@@ -92,7 +92,7 @@ router.get('/:product_id/update', async(req, res) => {
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()
     const allToppings = await dataLayer.getAllToppings()
-    const productForm = createProductForm(allToppings, allDoughTypes, allFlavors);
+    const productForm = createProductForm(allFlavors, allDoughTypes, allToppings);
 
     // fill in the existing values
     productForm.fields.name.value = product.get('name');
@@ -105,10 +105,9 @@ router.get('/:product_id/update', async(req, res) => {
 
     let selectedToppings = await product.related('toppings').pluck('id');
     productForm.fields.toppings.value = selectedToppings
-
     res.render('products/update_product', {
         'form': productForm.toHTML(bootstrapField),
-        'product': product
+        'product': product.toJSON()
     })
 
 })

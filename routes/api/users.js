@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken');
 const { User, BlacklistedToken } = require('../../models');
 const { checkIfAuthJWT } = require('../../middleware');
 
-const generateAccessToken = (expiresIn) => {
+const generateAccessToken = (user, token, expiresIn) => {
     return jwt.sign({
-        'username': user.get('username'),
+        'name': user.get('name'),
         'id': user.get('id'),
         'email': user.get('email')
-    }, process.env.TOKEN_SECRET, {
+    }, token, {
         expiresIn: expiresIn
     })
 }
@@ -29,20 +29,18 @@ router.post('/login', async(req, res) => {
     }).fetch({
         require: false
     });
-
+    
     if (user && user.get('password') == getHash(req.body.password)) {
-        const userObject = {
-            "name": user.get("name"),
-            "email": user.get("email"),
-            "id": user.get("id")
-        }
-        let accessToken = generateAccessToken(userObject, process.env.TOKEN_SECRET, "15m");
-        let refreshToken = generateAccessToken(userObject, process.env.REFRESH_TOKEN_SECRET, "7d")
+        // console.log(userObject);
+        let accessToken = generateAccessToken(user, process.env.TOKEN_SECRET, "15m");
+        let refreshToken = generateAccessToken(user, process.env.REFRESH_TOKEN_SECRET, "7d")
         let id = user.get("id")
-        res.send({
+        
+        res.json({
             accessToken, refreshToken, id
         })
     } else {
+        res.statusCode = 204
         res.send({
             'error': "Wrong Credentials"
         })
@@ -67,7 +65,7 @@ router.post("/refresh", async (req, res) => {
     })
 
     if (blacklistedToken){
-        res.status(401)
+        res.statusCode = 401
         res.send("Refresh Token Expired")
         return;
     }
@@ -96,7 +94,7 @@ router.post("/logout", async (req, res) => {
         })
 
         if (blacklistedToken) {
-            res.status(401)
+            res.statusCode = 401
             res.send("Token Expired")
             return
         }

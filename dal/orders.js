@@ -13,7 +13,7 @@ const getAllOrderStatus = async () => {
     return allOrderStatus
 }
 
-const getOrderById = async () => {
+const getOrderById = async (id) => {
     return await Order.where({
         "id": id
     }).fetch({

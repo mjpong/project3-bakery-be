@@ -20,5 +20,14 @@ router.get('/', async (req, res) => {
 
 })
 
+// get specific order by id
+router.get("/:order_id", async (req,res) => {
+    const order = await dataLayer.getOrderById(req.params.order_id).toJSON()
+    const allOrderStatus = dataLayer.getAllOrderStatus()
+
+
+    
+})
+
 // #3 export out the router
 module.exports = router;
