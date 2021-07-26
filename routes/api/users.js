@@ -52,7 +52,6 @@ router.get('/profile', checkIfAuthJWT, async(req, res) => {
         'id': req.user.id
     }).fetch({
         require: true });
-    console.log(user)
     res.send(user)
 })
 
@@ -75,7 +74,6 @@ router.post("/refresh", async (req, res) => {
     }
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user)=> {
-        console.log(user);
         if (err) {
             return res.sendStatus(403);
         }
