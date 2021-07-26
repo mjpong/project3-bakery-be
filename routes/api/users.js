@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { User, BlacklistedToken } = require('../../models');
 const { checkIfAuthJWT } = require('../../middleware');
 
+
 const generateAccessToken = (user, token, expiresIn) => {
     return jwt.sign({
         'name': user.get('name'),
@@ -31,7 +32,6 @@ router.post('/login', async(req, res) => {
     });
     
     if (user && user.get('password') == getHash(req.body.password)) {
-        // console.log(userObject);
         let accessToken = generateAccessToken(user, process.env.TOKEN_SECRET, "15m");
         let refreshToken = generateAccessToken(user, process.env.REFRESH_TOKEN_SECRET, "7d")
         let id = user.get("id")
@@ -52,6 +52,7 @@ router.get('/profile', checkIfAuthJWT, async(req, res) => {
         'id': req.user.id
     }).fetch({
         require: true });
+    console.log(user)
     res.send(user)
 })
 
@@ -74,6 +75,7 @@ router.post("/refresh", async (req, res) => {
     }
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user)=> {
+        console.log(user);
         if (err) {
             return res.sendStatus(403);
         }

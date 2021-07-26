@@ -39,8 +39,8 @@ const Order = bookshelf.model('Order', {
     order_status() {
         return this.belongsTo("OrderStatus")
     },
-    products() {
-        return this.belongsToMany("Product")
+    orders_products() {
+        return this.hasMany("OrderProduct")
     }
 });
 
@@ -58,12 +58,12 @@ const Product = bookshelf.model('Product', {
     toppings() {
         return this.belongsToMany("Topping")
     },
-    orders() {
-        return this.belongsToMany("Order")
+    orders_products() {
+        return this.hasMany("OrderProduct")
     }
 });
 
-const OrderedProduct = bookshelf.model('OrderedProduct', {
+const OrderProduct = bookshelf.model('OrderProduct', {
     tableName: "orders_products",
     order() {
         return this.belongsTo('Order')
@@ -112,7 +112,7 @@ module.exports = {
     OrderStatus,
     Order,
     Product,
-    OrderedProduct,
+    OrderProduct,
     ShoppingCartItem,
     Topping,
     User,

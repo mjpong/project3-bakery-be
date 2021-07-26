@@ -1,4 +1,4 @@
-const {Order, OrderStatus, Product, OrderedProduct} = require("../models")
+const {Order, OrderStatus, Product, OrderProduct} = require("../models")
 
 const getAllOrders = async () => {
     return await Order.collection().fetch({
@@ -22,8 +22,8 @@ const getOrderById = async (id) => {
     })
 }
 
-getOrderedProductById = async (id) => {
-    return await OrderedProduct.where({
+getOrderProductById = async (id) => {
+    return await OrderProduct.where({
         'id': parseInt(id)
     }).fetch({
         require: true,
@@ -31,4 +31,4 @@ getOrderedProductById = async (id) => {
     })
 }
 
-module.exports = { getAllOrders, getAllOrderStatus, getOrderById, getOrderedProductById}
+module.exports = { getAllOrders, getAllOrderStatus, getOrderById, getOrderProductById}
