@@ -1,11 +1,12 @@
 const jwt = require("jsonwebtoken")
 
 const checkIfAuth = (req, res, next) => {
+    console.log("CheckIfAuth")
     if (req.session.user) {
         next()
     } else {
         req.flash("error_message", "Please login before continuing")
-        res.redirect("/user/login")
+        res.redirect("/users/login")
     }
 }
 

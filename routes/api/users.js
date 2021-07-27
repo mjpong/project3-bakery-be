@@ -22,20 +22,30 @@ const getHash = (password) => {
     return hash;
 }
 
+const getUserByEmail = async (email) => {
+    let user = await User.where({
+        email
+    }).fetch({
+        require: false
+    })
+    return user;
+}
 
-router.post('/login', async(req, res) => {
+
+
+router.post('/login', async (req, res) => {
     let user = await User.where({
         'email': req.body.email,
         "role": 1
     }).fetch({
         require: false
     });
-    
+
     if (user && user.get('password') == getHash(req.body.password)) {
         let accessToken = generateAccessToken(user, process.env.TOKEN_SECRET, "15m");
         let refreshToken = generateAccessToken(user, process.env.REFRESH_TOKEN_SECRET, "7d")
         let id = user.get("id")
-        
+
         res.json({
             accessToken, refreshToken, id
         })
@@ -47,11 +57,12 @@ router.post('/login', async(req, res) => {
     }
 })
 
-router.get('/profile', checkIfAuthJWT, async(req, res) => {
+router.get('/profile', checkIfAuthJWT, async (req, res) => {
     let user = await User.where({
         'id': req.user.id
     }).fetch({
-        require: true });
+        require: true
+    });
     res.send(user)
 })
 
@@ -67,21 +78,29 @@ router.post("/refresh", async (req, res) => {
         require: false
     })
 
-    if (blacklistedToken){
+    if (blacklistedToken) {
         res.statusCode = 401
         res.send("Refresh Token Expired")
         return;
     }
 
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user)=> {
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
         if (err) {
             return res.sendStatus(403);
         }
-
-        let accessToken = generateAccessToken(user, process.env.TOKEN_SECRET, '15m');
+        
+        let userModel = await User.where({
+            'email': req.body.email,
+            "role": 1
+        }).fetch({
+            require: false
+        });
+        let accessToken = generateAccessToken(userModel, process.env.TOKEN_SECRET, '15m');
         res.send({
             accessToken
         })
+
+
     })
 })
 
@@ -117,15 +136,15 @@ router.post("/logout", async (req, res) => {
     }
 })
 
-router.post("/register", async(req,res) => {
-    if(req.body.password !== req.body.confirmPassword){
+router.post("/register", async (req, res) => {
+    if (req.body.password !== req.body.confirmPassword) {
         res.send("Unable to create user");
     }
 
     let checkEmail = await User.where({
         "email": req.body.email
-    }).fetch({require: false});
-    
+    }).fetch({ require: false });
+
     if (checkEmail) {
         res.send("Email already in use")
     } else {
@@ -167,12 +186,12 @@ router.get("/edit/:user_id", async (req, res) => {
 router.post("/edit/:user_id", async (req, res) => {
     let id = req.params.user_id
     let user = await User.where({
-            "id": id
-        }).fetch({
-            require: true
-        })
-        
-    if (req.body.password){
+        "id": id
+    }).fetch({
+        require: true
+    })
+
+    if (req.body.password) {
         try {
             user.set("password", getHash(req.body.password))
             user.save()
@@ -183,7 +202,7 @@ router.post("/edit/:user_id", async (req, res) => {
         }
     }
 
-    if (req.body.address){
+    if (req.body.address) {
         try {
             user.set("address", req.body.address)
             user.save()

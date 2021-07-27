@@ -106,6 +106,7 @@ const createProductForm = (flavors, dough_types, toppings) => {
             }
         }),
         'cost': fields.string({
+            label: "Cost in Cents (100 = $1)",
             required: true,
             errorAfterField: true,
             cssClasses: {
@@ -128,13 +129,6 @@ const createProductForm = (flavors, dough_types, toppings) => {
                 label: ["form-label"]
             },
             validators: [validators.min(1)],
-        }),
-        "image": fields.string({
-            required: true,
-            errorAfterField: true,
-            cssClasses: {
-                label: ["form-label"]
-            }
         }),
         "flavor_id": fields.string({
             label: "Flavor",
@@ -166,6 +160,16 @@ const createProductForm = (flavors, dough_types, toppings) => {
             widget: widgets.multipleSelect(),
             choices: toppings
         }),
+        // 'image': fields.string({
+        //     required: true,
+        //     errorAfterField: true,
+        //     widget: forms.widgets.hidden(),
+        //     cssClasses: {
+        //         label: ["form-label"]
+        //     },
+        //     'id':'uploadcare',
+        //     'role':'uploadcare-uploader'
+        // })
     })
 };
 

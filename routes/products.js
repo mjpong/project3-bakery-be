@@ -23,6 +23,9 @@ const {
 // import in DAL
 const dataLayer = require('../dal/products')
 
+// import uploadcare key
+const image_key = process.env.UPLOADCARE_PUBLIC_KEY
+
 // inport middleware
 const { checkIfAuth } = require('../middleware')
 
@@ -46,27 +49,34 @@ router.get('/', async(req, res) => {
 })
 
 // PRODUCT CREATE
-router.get('/create', checkIfAuth, async(req, res) => {
+router.get('/create', async(req, res) => {
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()
     const allToppings = await dataLayer.getAllToppings()
 
     const productForm = createProductForm(allFlavors, allDoughTypes, allToppings);
     res.render('products/create_product', {
-        'form': productForm.toHTML(bootstrapField)
+        'form': productForm.toHTML(bootstrapField),
+
     })
 })
 
-router.post('/create', checkIfAuth, async(req, res) => {
+router.post('/create', async(req, res) => {
 
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()
     const allToppings = await dataLayer.getAllToppings()
 
+    console.log(req.body)
+
     const productForm = createProductForm(allFlavors, allDoughTypes, allToppings);
     productForm.handle(req, {
         'success': async(form) => {
+            console.log(form.data);
+
             let { toppings, ...productData } = form.data;
+            productData.image = req.body.image;
+            console.log("productData=", productData)
             const product = new Product(productData);
             await product.save();
             if (toppings) {
@@ -79,7 +89,7 @@ router.post('/create', checkIfAuth, async(req, res) => {
             res.render("products/create_product", {
                 'form': form.toHTML(bootstrapField)
             })
-            res.flash("error_message", 'Error, Cinnamon Roll cannot be created')
+            req.flash("error_message", 'Error, Cinnamon Roll cannot be created')
         }
     })
 })
@@ -99,7 +109,7 @@ router.get('/:product_id/update', async(req, res) => {
     productForm.fields.cost.value = product.get('cost');
     productForm.fields.description.value = product.get('description');
     productForm.fields.stock.value = product.get('stock');
-    productForm.fields.image.value = product.get('image');
+    // productForm.fields.image.value = product.get('image');
     productForm.fields.flavor_id.value = product.get('flavor_id');
     productForm.fields.dough_type_id.value = product.get('dough_type_id');
 
@@ -107,6 +117,7 @@ router.get('/:product_id/update', async(req, res) => {
     productForm.fields.toppings.value = selectedToppings
     res.render('products/update_product', {
         'form': productForm.toHTML(bootstrapField),
+        'image': product.get('image'),
         'product': product.toJSON()
     })
 
@@ -122,9 +133,12 @@ router.post('/:product_id/update', async(req, res) => {
     const productForm = createProductForm();
     productForm.handle(req, {
         'success': async(form) => {
+            console.log(form.data);
             let { toppings, ...productData } = form.data;
-            product.set(productData);
-            product.save();
+            productData.image = req.body.image;
+            console.log("productData=", productData)
+            const product = new Product(productData);
+            await product.save();
 
             let toppingIds = toppings.split(',');
             let existingToppingIds = await product.related('toppings').pluck('id');

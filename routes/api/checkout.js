@@ -3,7 +3,7 @@ const router = express.Router();
 const CartServices = require('../../services/CartServices')
 const Stripe = require('stripe')(process.env.STRIPE_KEY_SECRET)
 const bodyParser = require("body-parser")
-const { Order, User, OrderProduct } = require("../../models")
+const { Order, OrderProduct } = require("../../models")
 const jwt = require("jsonwebtoken")
 
 router.get('/:user_id', async (req, res) => {

@@ -3,15 +3,30 @@
 {{#block 'content'}}
 <h1>Create New Product</h1>
 <form method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
     {{{form}}}
     <div>
-        <a href="#" class="btn btn-primary my-3" id="upload_widget">Upload Image</a>
-        <img src="" style="display:none" id="uploaded_image"/>
+        <p>Upload Image:</p>
+        <input type="hidden" role="uploadcare-uploader" id="uploadcare" name="image" />
     </div>
-    <input type="submit" value="Add Product" class="btn btn-primary"/>
-    <a href="/products">Cancel</a>
+
+    <input type="submit" id="create" value="Add Product" class="btn btn-primary" />
+    <a href="/products" class="btn btn-primary">Cancel</a>
+
 </form>
+{{/block}}
+
+{{!-- Create the Uploadcare image widget --}}
+{{#block 'js'}}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+
+    UPLOADCARE_PUBLIC_KEY = "26b5265994e7410e82b0";
+
+</script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8">
+</script>
+
 {{/block}}
 
 {{/extends}}

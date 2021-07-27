@@ -122,8 +122,8 @@ router.get("/profile/update", async(req, res) => {
         updateForm.fields.address.value = user.get("address")
             // Render page
 
-        res.render("users/profile", {
-            "form": form.toHTML(bootstrapField)
+        res.render("users/update", {
+            "form": updateForm.toHTML(bootstrapField)
         })
     }
 })
@@ -158,14 +158,20 @@ router.post("/profile/update", async(req, res) => {
 })
 
 //PROFILE
-router.get('/profile', (req, res) => {
+router.get('/profile', async (req, res) => {
     const user = req.session.user;
-    if (!user) {
+
+    let profile = await User.where({
+        "id": user.id
+    }).fetch({
+        require: false
+    })
+    if (!profile) {
         req.flash('error_messages', 'Please login to view this page');
         res.redirect('/users/login');
     } else {
         res.render('users/profile', {
-            'user': user
+            'user': profile.toJSON()
         })
     }
 })
