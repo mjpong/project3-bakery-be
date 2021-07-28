@@ -1,17 +1,45 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
-<h1>Welcome to the Orders Page</h1>
-<tr>
-    <th>ID</th>
-    <th>Order Status</th>
-</tr>
-{{#each orders}}
-<tr>
-    <td>{{this.id}}</td>
+<h1>Orders</h1>
+<p>Total of {{orders.length}} orders</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order Id</th>
+            <th>Order Date</th>
+            <th>User ID</th>
+            <th>Total Cost</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each orders}}
+        <tr>
+            <td>
+                {{this.id}}
+            </td>
+            <td>
+                {{this.orderDateShort}}
+            </td>
+            <td>
+                {{this.user_id}}
+            </td>
+            <td>
+                ${{this.orderCost}}
+            </td>
+            <td>
+                {{this.order_status.status}}
+            </td>
+            <td>
+                <a href="/orders/{{this.id}}">More details</a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
 
-</tr>
-{{/each}}
 {{/block}}
 
 {{/extends}}

@@ -1,0 +1,57 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+
+<h1>Displaying Order {{order.id}}</h1>
+<p>User ID: {{order.user_id}}</p>
+<p>Receiver Name: {{order.reciever_name}}</p>
+<p>Receiver Address: {{order.receiver_address}}</p>
+<p>Date: {{order.orderDateShort}}</p>
+<p>Total Cost: {{order.orderCost}}</p>
+<div class="update-form">
+    <form method="POST">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+        {{{form}}}
+        <input type="submit" class="btn btn-primary" value="Update" id="update">
+    </form>
+</div>
+<h4>Item Details</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Id</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+
+        </tr>
+    </thead>
+
+    <tbody>
+        {{#each order.orders_products}}
+        <tr>
+            <td>
+                {{this.product_id}}
+            </td>
+            <td>
+                {{this.product.name}}
+            </td>
+
+            <td>
+                {{this.quantity}}
+            </td>
+            <td>
+                {{this.product.cost}}
+            </td>
+
+        </tr>
+
+        {{/each}}
+
+    </tbody>
+</table>
+
+
+{{/block}}
+
+{{/extends}}

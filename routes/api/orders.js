@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const productDataLayer = require('../../dal/products')
-const { Order, Product} = require('../../models');
+const { Order, Product, OrderProduct} = require('../../models');
 
 // All Orders
 router.get('/', async (req, res) => {
