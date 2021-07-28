@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-
+const { checkIfAuthJWT, checkIfAuth } = require('../../middleware');
 const CartServices = require('../../services/CartServices')
 
 //get
-router.get('/:user_id', async(req,res)=> {
-    let cart = new CartServices(req.params.user_id);
+router.get('/', checkIfAuthJWT, async (req, res) => {
+    let cart = new CartServices(req.user.id);
     try {
         const cartItems = await cart.getAll()
 
@@ -15,9 +15,23 @@ router.get('/:user_id', async(req,res)=> {
     }
 })
 
+//remove
+router.delete('/remove/:product_id', checkIfAuthJWT, async (req, res) => {
+
+    let cart = new CartServices(req.user.id)
+    try {
+        await cart.removeItem(req.params.product_id)
+        res.status(200)
+        res.send("Item removed from cart")
+    } catch (e) {
+        res.status(204)
+        res.send("Item not found")
+    }
+})
+
 //add
-router.post("/:user_id/:product_id/add", async(req,res) => {
-    let cart = new CartServices(req.params.user_id);
+router.post("/add/:product_id", checkIfAuthJWT, async (req, res) => {
+    let cart = new CartServices(req.user.id);
     try {
         await cart.addToCart(req.params.product_id)
         res.send("Item has been added to cart")
@@ -26,27 +40,42 @@ router.post("/:user_id/:product_id/add", async(req,res) => {
     }
 })
 
-//update
-router.post('/:user_id/:product_id/update', async(req,res) => {
-    let cart = new CartServices(req.params.user_id);
-    try{
-        await cart.updateQuantity(req.params.tea_id, req.body.quantity)
-        res.send('Item quantity updated')
-    } catch (e) {
-        res.send("Item not found")
-    }
-}) 
-
-
-//remove
-router.get('/:user_id/:product_id/remove'), async (req, res) => {
-    let cart = new CartServices(req.params.user_id)
+// add quantity
+router.post('/increase/:product_id', checkIfAuthJWT, async (req, res) => {
+    let cart = new CartServices(req.user.id);
     try {
-        await cart.removeItem(req.params.product_id)
-        res.send("Item removed from cart")
-    } catch (e) {
-        res.send("Item not found")
+        if (cart) {
+            let item = await cart.getItemById(req.params.product_id);
+            item.set("quantity", item.get("quantity") +1)
+            await item.save()
+            res.send(item.toJSON())
+        }
     }
-}
+    catch (e) {
+        res.status(204)
+        res.send("Cannot increase item")
+    }
+
+})
+
+
+// reduce quantity
+router.post('/decrease/:product_id', checkIfAuthJWT, async (req, res) => {
+    let cart = new CartServices(req.user.id);
+    try {
+        if (cart) {
+            let item = await cart.getItemById(req.params.product_id);
+            item.set("quantity", item.get("quantity") -1)
+            await item.save()
+            res.send(item.toJSON())
+        }
+    }
+    catch (e) {
+        res.status(204)
+        res.send("Cannot decrease item")
+    }
+
+})
+
 
 module.exports = router;

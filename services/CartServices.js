@@ -30,13 +30,16 @@ class CartServices {
         return cartItem
     }
 
-    async removeItem(productId) {
-        return await dataLayer.removeItem(this.user_id, productId)
+    async removeItem(id) {
+        return await dataLayer.removeItem(this.user_id, id)
     }
 
     async updateQuantity(productId, updatedQuantity) {
         return await dataLayer.updateQuantity(this.user_id, productId, updatedQuantity)
     }
     
+    async getItemById(id) {
+        return await dataLayer.getItemById(id)
+    }
 }
 module.exports = CartServices;

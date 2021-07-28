@@ -19,10 +19,18 @@ const getItemByUserAndProduct = async (userId, productId) => {
     })
 }
 
-const removeItem = async (userId, productId) => {
-    const item = await getItemByUserAndProduct(userId, productId)
+const getItemById = async (id) => {
+    return await ShoppingCartItem.where({
+        "id": id
+    }).fetch({
+        require: false
+    })
+}
+
+const removeItem = async (id) => {
+    const item = await ShoppingCartItem.where({"id": id}).fetch();
     if (item) {
-        item.destroy();
+        await item.destroy();
         return true
     }
     return false
@@ -39,4 +47,4 @@ const updateQuantity = async (userId, productId, updatedQuantity) => {
     }
 }
 
-module.exports = { getAllItems, getItemByUserAndProduct, removeItem, updateQuantity }
+module.exports = { getAllItems, getItemById, getItemByUserAndProduct, removeItem, updateQuantity }
