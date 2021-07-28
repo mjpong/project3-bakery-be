@@ -8,15 +8,16 @@
 <p>Receiver Address: {{order.receiver_address}}</p>
 <p>Date: {{order.orderDateShort}}</p>
 <p>Total Cost: {{order.orderCost}}</p>
-<div class="update-form">
+<div class="update-form col-4">
     <form method="POST">
         <input type="hidden" name="_csrf" value="{{csrfToken}}" />
         {{{form}}}
         <input type="submit" class="btn btn-primary" value="Update" id="update">
     </form>
 </div>
-<h4>Item Details</h4>
+
 <table class="table">
+    <h4>Item Details</h4>
     <thead>
         <tr>
             <th>Product Id</th>
@@ -50,7 +51,7 @@
 
     </tbody>
 </table>
-
+<a href="/orders/{{order.id}}/delete" class="btn btn-warning">Delete Order</a>
 
 {{/block}}
 

@@ -36,10 +36,6 @@ router.get("/:order_id", async (req, res) => {
     const orderJSON = order.toJSON()
     const allOrderStatus = await dataLayer.getAllOrderStatus()
 
-    // const eachOrderProduct = await dataLayer.getOrderProductById(orderId)
-    // const eachOrderProductJSON = eachOrderProduct.toJSON()
-    // console.log(eachOrderProductJSON)
-
     let date = orderJSON.order_date;
     let totalCost = orderJSON.total_cost;
     orderJSON['orderDateShort'] = date.toLocaleDateString('en-GB')
@@ -48,14 +44,13 @@ router.get("/:order_id", async (req, res) => {
     const form = createOrderUpdateForm(allOrderStatus)
     form.fields.status_id.value = order.get("status_id")
 
-    // for (let order of eachOrderProductJSON) {
-    //     let date = order.order_date;å
-    //     let cost = order.total_cost;
-    //     order['orderDateShort'] = date.toLocaleDateString('en-GB')
-    //     order['orderCost'] = (cost / 100).toFixed(2)
-    // }
 
-    console.log(orderJSON.orders_products)
+    for(let i = 0; i < orderJSON.orders_products.length; i++){
+        let cost =  orderJSON.orders_products[i]['product']['cost']
+        orderJSON.orders_products[i]['product']['cost'] = (cost / 100).toFixed(2)
+    }
+
+    // console.log(orderJSON.orders_products)
 
     res.render("orders/details", {
         "form": form.toHTML(bootstrapField),
@@ -74,7 +69,7 @@ router.post('/:order_id', async (req, res) => {
         "success": async (form) => {
             console.log(form.data)
             order.set("order_status_id", form.data.status_id);
-            // order.set(form.data)
+
             if (form.data.status_id == "4"){
                 order.set("completion_date", new Date())
             } else {
