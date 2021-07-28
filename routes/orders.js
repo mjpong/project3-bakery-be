@@ -49,7 +49,7 @@ router.get("/:order_id", async (req, res) => {
     form.fields.status_id.value = order.get("status_id")
 
     // for (let order of eachOrderProductJSON) {
-    //     let date = order.order_date;
+    //     let date = order.order_date;å
     //     let cost = order.total_cost;
     //     order['orderDateShort'] = date.toLocaleDateString('en-GB')
     //     order['orderCost'] = (cost / 100).toFixed(2)
@@ -72,8 +72,10 @@ router.post('/:order_id', async (req, res) => {
     
     form.handle(req,{
         "success": async (form) => {
-            order.set(form.data)
-            if (order.get("status_id" == "4")){
+            console.log(form.data)
+            order.set("order_status_id", form.data.status_id);
+            // order.set(form.data)
+            if (form.data.status_id == "4"){
                 order.set("completion_date", new Date())
             } else {
                 order.set("completion_date", null)
