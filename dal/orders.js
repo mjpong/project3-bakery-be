@@ -15,9 +15,9 @@ const getAllOrderStatus = async () => {
     
 }
 
-const getOrderById = async (orderId) => {
+const getOrderById = async (id) => {
     return await Order.where({
-        "id": parseInt(orderId)
+        "id": parseInt(id)
     }).fetch({
         require: true,
         withRelated: ["order_status", "orders_products", "orders_products.product"]

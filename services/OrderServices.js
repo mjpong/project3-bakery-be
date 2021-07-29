@@ -6,8 +6,16 @@ class OrderServices{
     }
 
     async getAll() {
-        return await dataLayer.getAllOrders()
+        return await dataLayer.getAllOrders(this.user_id)
     }
+
+    async getOrderById(id) {
+        return await dataLayer.getOrderById(id)
+    }
+
+
+
+
 }
 
 module.exports = OrderServices

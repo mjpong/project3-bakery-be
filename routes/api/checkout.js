@@ -25,6 +25,8 @@ router.get('/:user_id', async (req, res) => {
     newOrder.set("receiver_address", req.query.address)
     newOrder.set("order_date", new Date())
     await newOrder.save()
+    console.log(newOrder)
+    let newOrderId = newOrder.toJSON().id
 
     // get all items from cart
     let allItems = await cart.getAll();
@@ -50,24 +52,26 @@ router.get('/:user_id', async (req, res) => {
             'order_id': item.get('order_id'),
             'cost': item.get('cost')
         })
-
+        console.log("Creating model for OrderProduct", item.get('product_id'));
         const newOrderProduct = new OrderProduct();
         newOrderProduct.set("product_id", item.get('product_id'))
         newOrderProduct.set("order_id", newOrder.get("id"))
         newOrderProduct.set("quantity", item.get('quantity'))
         newOrderProduct.set("cost",item.related("product").get("cost"),)
         await newOrderProduct.save();
-
+        console.log("Successfully created OrderProduct")
         // update and delete cart items
-        await cartServices.removeItem(item.get('product_id'))
+        await cartServices.removeItem(item.get('id'))
     }
+
+    
 
     // create stripe payment
     let metaData = JSON.stringify(meta)
     const payment = {
         payment_method_types: ['card'],
         line_items: lineItems,
-        success_url: process.env.STRIPE_SUCCESS_URL + '?sessionId={CHECKOUT_SESSION_ID}',
+        success_url: process.env.STRIPE_SUCCESS_URL + '/' + newOrderId + "?payment=success",
         cancel_url: process.env.STRIPE_ERROR_URL,
         metadata: {
             'orders': metaData,

@@ -8,7 +8,6 @@ router.get('/', checkIfAuthJWT, async (req, res) => {
     let cart = new CartServices(req.user.id);
     try {
         const cartItems = await cart.getAll()
-
         res.send(cartItems.toJSON())
     } catch (e) {
         res.send("Unable to get items")
@@ -17,10 +16,10 @@ router.get('/', checkIfAuthJWT, async (req, res) => {
 
 //remove
 router.delete('/remove/:product_id', checkIfAuthJWT, async (req, res) => {
-
     let cart = new CartServices(req.user.id)
     try {
         await cart.removeItem(req.params.product_id)
+        
         res.status(200)
         res.send("Item removed from cart")
     } catch (e) {

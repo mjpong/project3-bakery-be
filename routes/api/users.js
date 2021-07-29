@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
     });
 
     if (user && user.get('password') == getHash(req.body.password)) {
-        let accessToken = generateAccessToken(user, process.env.TOKEN_SECRET, "15m");
+        let accessToken = generateAccessToken(user, process.env.TOKEN_SECRET, "60m");
         let refreshToken = generateAccessToken(user, process.env.REFRESH_TOKEN_SECRET, "7d")
         let id = user.get("id")
 
@@ -95,7 +95,7 @@ router.post("/refresh", async (req, res) => {
         }).fetch({
             require: false
         });
-        let accessToken = generateAccessToken(userModel, process.env.TOKEN_SECRET, '15m');
+        let accessToken = generateAccessToken(userModel, process.env.TOKEN_SECRET, '60m');
         res.send({
             accessToken
         })

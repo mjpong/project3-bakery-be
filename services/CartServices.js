@@ -31,7 +31,7 @@ class CartServices {
     }
 
     async removeItem(id) {
-        return await dataLayer.removeItem(this.user_id, id)
+        return await dataLayer.removeItem(id)
     }
 
     async updateQuantity(productId, updatedQuantity) {

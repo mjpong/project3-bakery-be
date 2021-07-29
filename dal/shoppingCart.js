@@ -28,9 +28,11 @@ const getItemById = async (id) => {
 }
 
 const removeItem = async (id) => {
+    console.log(id);
     const item = await ShoppingCartItem.where({"id": id}).fetch();
+    console.log(item);
     if (item) {
-        await item.destroy();
+        item.destroy();
         return true
     }
     return false
