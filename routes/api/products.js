@@ -8,12 +8,6 @@ router.get('/', async(req, res) => {
     res.send(allProducts)
 })
 
-router.get('/:product_id', async(req, res) => {
-    const productId = req.params.product_id
-    const getProductById = await productDataLayer.getProductById(productId);
-    res.send(getProductById)
-})
-
 router.get('/flavors', async(req, res) => {
     const allFlavors = await productDataLayer.getAllFlavors()
     res.send(allFlavors)
@@ -35,12 +29,28 @@ router.get('/ingredients', async(req, res) => {
 })
 
 router.post('/search', async(req, res) => {
-    let search = Product.collection();
-    const completeSearch = await search.fetch({
+    let q = Product.collection();
+    if (req.body.name) {
+        q = q.where("name", "like", "%" + req.body.name + "%")
+    }
+    if (req.body.flavor_id) {
+        q = q.where("flavor_id", "=", req.body.flavor_id)
+    }
+    if (req.body.dough_type_id) {
+        q = q.where("dough_type_id", "=", req.body.dough_type_id)
+    }
+
+    const completeSearch = await q.fetch({
         require: false,
-        withRelated: ['toppings', "dough_type", "flavor", "dough_type.ingredients"]
+        withRelated: ['flavor', "dough_type", "toppings"]
     })
     res.send(completeSearch)
+})
+
+router.get('/:product_id', async(req, res) => {
+    const productId = req.params.product_id
+    const getProductById = await productDataLayer.getProductById(productId);
+    res.send(getProductById)
 })
 
 module.exports = router;
