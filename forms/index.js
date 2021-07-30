@@ -323,6 +323,7 @@ const createLoginForm = () => {
 
 //search forms 
 const createSearchForm = (flavors, toppings, dough_types) => {
+    console.log(flavors, toppings, dough_types)
     return forms.create({
         "name": fields.string({
             errorAfterField: true,
@@ -330,6 +331,22 @@ const createSearchForm = (flavors, toppings, dough_types) => {
                 label: ["form-label"]
             },
             validators: [validators.maxlength(100)]
+        }),
+        'min_price': fields.string({
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            validators:[validators.integer(), validators.min(0)]
+        }),
+        'max_price': fields.string({
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            validators:[validators.integer(), validators.min(0)]
         }),
         "flavor_id": fields.string({
             label: "Flavor",

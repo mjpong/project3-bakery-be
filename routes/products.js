@@ -9,7 +9,8 @@ const {
     createFlavorForm,
     createDoughTypeForm,
     createIngredientForm,
-    createToppingForm
+    createToppingForm,
+    createSearchForm
 } = require('../forms')
 
 const {
@@ -23,33 +24,89 @@ const {
 // import in DAL
 const dataLayer = require('../dal/products')
 
-// import uploadcare key
-const image_key = process.env.UPLOADCARE_PUBLIC_KEY
-
 // inport middleware
 const { checkIfAuth } = require('../middleware')
 
 //  #2 Add a new route to the Express router
-router.get('/', async(req, res) => {
-    let products = await Product.collection().fetch({ withRelated: ['flavor', "dough_type", "toppings"] })
-    let flavors = await Flavor.collection().fetch()
-    let ingredients = await Ingredient.collection().fetch()
-    let doughtypes = await DoughType.collection().fetch({ withRelated: ['ingredients'] })
-    let toppings = await Topping.collection().fetch()
+router.get('/', async (req, res) => {
+    let allProducts = await dataLayer.getAllProducts()
+    let allIngredients = await dataLayer.getAllIngredients()
+    const allFlavors = await dataLayer.getAllFlavors()
+    const allDoughTypes = await dataLayer.getAllDoughTypes()
+    const allToppings = await dataLayer.getAllToppings()
 
-    res.render("products/index", {
+    allFlavors.unshift([0, "-"])
+    allDoughTypes.unshift([0, "-"])
+    allToppings.unshift([0, "-"])
+    const searchForm = createSearchForm(allFlavors, allToppings, allDoughTypes)
 
-        'products': products.toJSON(),
-        'flavors': flavors.toJSON(),
-        'ingredients': ingredients.toJSON(),
-        'doughtypes': doughtypes.toJSON(),
-        'toppings': toppings.toJSON()
+    //query connector
+    let q = Product.collection()
 
+    searchForm.handle(req, {
+        'empty': async (form) => {
+            let products = await q.fetch({
+                withRelated: ['toppings', "dough_type", "flavor", "dough_type.ingredients"]
+            })
+            res.render("products/index", {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+        },
+        "error": async (form) => {
+            let products = await q.fetch({
+                withRelated: ['toppings', "dough_type", "flavor", "dough_type.ingredients"]
+            })
+            res.render("products/index", {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+
+        },
+        'success': async (form) => {
+            console.log(form.data);
+            if (form.data.name) {
+                q = q.where("name", "like", "%" + form.data.name + "%")
+            }
+            if (form.data.min_price) {
+                q = q.where('cost', '>=', req.query.min_price)
+            }
+            if (form.data.max_price) {
+                q = q.where('cost', '<=', req.query.max_price);
+            }
+            if (form.data.flavor_id !== "0") {
+                q = q.where("flavor_id", "=", form.data.flavor_id)
+            }
+            if (form.data.dough_type_id !== "0") {
+                q = q.where("dough_type_id", "=", form.data.dough_type_id)
+            }
+            if (form.data.toppings) {
+                q = q.query("join", "products_toppings", "products.id", "product_id").where("topping_id", "in", form.data.toppings.split(","))
+            }
+            
+            let products = await q.fetch({
+                withRelated: ['flavor', "dough_type", "toppings"]
+            })
+
+            res.render("products/index", {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+
+        }
     })
+
+    // res.render("products/index", {
+    //     'products': allProducts.toJSON(),
+    //     'flavors': allFlavors,
+    //     'ingredients': allIngredients,
+    //     'doughtypes': allDoughTypes,
+    //     'toppings': allToppings
+    // })
 })
 
 // PRODUCT CREATE
-router.get('/create', async(req, res) => {
+router.get('/create', async (req, res) => {
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()
     const allToppings = await dataLayer.getAllToppings()
@@ -61,7 +118,7 @@ router.get('/create', async(req, res) => {
     })
 })
 
-router.post('/create', async(req, res) => {
+router.post('/create', async (req, res) => {
 
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()
@@ -71,7 +128,7 @@ router.post('/create', async(req, res) => {
 
     const productForm = createProductForm(allFlavors, allDoughTypes, allToppings);
     productForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             console.log(form.data);
 
             let { toppings, ...productData } = form.data;
@@ -85,7 +142,7 @@ router.post('/create', async(req, res) => {
             req.flash("success_message", `${product.get('name')} has been created`)
             res.redirect('/products?tab=cinnamonrolls');
         },
-        'error': async(form) => {
+        'error': async (form) => {
             res.render("products/create_product", {
                 'form': form.toHTML(bootstrapField)
             })
@@ -95,7 +152,7 @@ router.post('/create', async(req, res) => {
 })
 
 // PRODUCT UPDATE
-router.get('/:product_id/update', async(req, res) => {
+router.get('/:product_id/update', async (req, res) => {
     // retrieve the product
     const productId = req.params.product_id
     const product = await dataLayer.getProductById(productId)
@@ -123,7 +180,7 @@ router.get('/:product_id/update', async(req, res) => {
 
 })
 
-router.post('/:product_id/update', async(req, res) => {
+router.post('/:product_id/update', async (req, res) => {
 
     // fetch the product that we want to update
     const productId = req.params.product_id
@@ -132,7 +189,7 @@ router.post('/:product_id/update', async(req, res) => {
     // process the form
     const productForm = createProductForm();
     productForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             console.log(form.data);
             let { toppings, ...productData } = form.data;
             productData.image = req.body.image;
@@ -149,7 +206,7 @@ router.post('/:product_id/update', async(req, res) => {
 
             res.redirect('/products?tab=cinnamonrolls');
         },
-        'error': async(form) => {
+        'error': async (form) => {
             res.render('products/update_product', {
                 'form': form.toHTML(bootstrapField),
                 'product': product.toJSON()
@@ -161,7 +218,7 @@ router.post('/:product_id/update', async(req, res) => {
 })
 
 // PRODUCT DELETE
-router.get('/:product_id/delete', async(req, res) => {
+router.get('/:product_id/delete', async (req, res) => {
     // fetch the product that we want to delete
     const productId = req.params.product_id
     const product = await dataLayer.getProductById(productId)
@@ -171,7 +228,7 @@ router.get('/:product_id/delete', async(req, res) => {
     })
 });
 
-router.post('/:product_id/delete', async(req, res) => {
+router.post('/:product_id/delete', async (req, res) => {
     // fetch the product that we want to delete
     const productId = req.params.product_id
     const product = await dataLayer.getProductById(productId)
@@ -181,25 +238,25 @@ router.post('/:product_id/delete', async(req, res) => {
 })
 
 // FLAVOR CREATE
-router.get('/flavors/create', async(req, res) => {
+router.get('/flavors/create', async (req, res) => {
     const flavorForm = createFlavorForm();
     res.render('products/create_flavor', {
         'form': flavorForm.toHTML(bootstrapField)
     })
 })
 
-router.post('/flavors/create', async(req, res) => {
+router.post('/flavors/create', async (req, res) => {
 
     const flavorForm = createFlavorForm();
     flavorForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             const flavor = new Flavor();
             flavor.set('name', form.data.name);
             await flavor.save();
             req.flash("success_message", `${flavor.get('name')} has been created`)
             res.redirect('/products?tab=flavors');
         },
-        'error': async(form) => {
+        'error': async (form) => {
             res.render("products/create_flavor", {
                 'form': form.toHTML(bootstrapField)
             })
@@ -209,7 +266,7 @@ router.post('/flavors/create', async(req, res) => {
 })
 
 // FLAVOR UPDATE
-router.get('/flavors/:flavor_id/update', async(req, res) => {
+router.get('/flavors/:flavor_id/update', async (req, res) => {
     // retrieve the flavor
     const flavorId = req.params.flavor_id
     const flavor = await dataLayer.getFlavorById(flavorId)
@@ -225,7 +282,7 @@ router.get('/flavors/:flavor_id/update', async(req, res) => {
 
 })
 
-router.post('/flavors/:flavor_id/update', async(req, res) => {
+router.post('/flavors/:flavor_id/update', async (req, res) => {
     // fetch all the flavors
     const allFlavors = await dataLayer.getAllFlavors()
 
@@ -236,13 +293,13 @@ router.post('/flavors/:flavor_id/update', async(req, res) => {
     // process the form
     const flavorForm = createFlavorForm(allFlavors);
     flavorForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             flavor.set(form.data);
             flavor.save();
             req.flash("success_message", `${flavor.get('name')} has been created`)
             res.redirect('/products?tab=flavors');
         },
-        'error': async(form) => {
+        'error': async (form) => {
             res.render('products/update_item', {
                 'form': form.toHTML(bootstrapField)
             })
@@ -252,7 +309,7 @@ router.post('/flavors/:flavor_id/update', async(req, res) => {
 })
 
 // FLAVOR DELETE
-router.get('/flavors/:flavor_id/delete', async(req, res) => {
+router.get('/flavors/:flavor_id/delete', async (req, res) => {
     // fetch the flavors to delete
     const flavorId = req.params.flavor_id
     const flavor = await dataLayer.getFlavorById(flavorId)
@@ -263,7 +320,7 @@ router.get('/flavors/:flavor_id/delete', async(req, res) => {
     })
 })
 
-router.post('/flavors/:flavor_id/delete', async(req, res) => {
+router.post('/flavors/:flavor_id/delete', async (req, res) => {
     const flavorId = req.params.flavor_id
     const flavor = await dataLayer.getFlavorById(flavorId)
     await flavor.destroy();
@@ -272,24 +329,24 @@ router.post('/flavors/:flavor_id/delete', async(req, res) => {
 })
 
 // TOPPING CREATE
-router.get('/toppings/create', async(req, res) => {
+router.get('/toppings/create', async (req, res) => {
     const toppingForm = createToppingForm();
     res.render('products/create_topping', {
         'form': toppingForm.toHTML(bootstrapField)
     })
 })
 
-router.post('/toppings/create', async(req, res) => {
+router.post('/toppings/create', async (req, res) => {
     const toppingForm = createToppingForm();
     toppingForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             const topping = new Topping();
             topping.set('name', form.data.name);
             await topping.save();
             req.flash("success_message", `${topping.get('name')} has been created`)
             res.redirect('/products?tab=toppings');
         },
-        'error': async(form) => {
+        'error': async (form) => {
             res.render("products/create_topping", {
                 'form': form.toHTML(bootstrapField)
             })
@@ -299,7 +356,7 @@ router.post('/toppings/create', async(req, res) => {
 })
 
 // TOPPING UPDATE
-router.get('/toppings/:topping_id/update', async(req, res) => {
+router.get('/toppings/:topping_id/update', async (req, res) => {
     // retrieve the toppings
     const toppingId = req.params.topping_id
     const topping = await dataLayer.getToppingById(toppingId)
@@ -317,7 +374,7 @@ router.get('/toppings/:topping_id/update', async(req, res) => {
 
 })
 
-router.post('/toppings/:topping_id/update', async(req, res) => {
+router.post('/toppings/:topping_id/update', async (req, res) => {
     // get the topping to update
     const toppingId = req.params.topping_id
     const topping = await dataLayer.getToppingById(toppingId)
@@ -325,13 +382,13 @@ router.post('/toppings/:topping_id/update', async(req, res) => {
     // process the form
     const toppingForm = createToppingForm();
     toppingForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             topping.set(form.data)
             topping.save();
             req.flash("success_message", `${topping.get('name')} has been updated`)
             res.redirect('/products?tab=toppings');
         },
-        'error': async(form) => {
+        'error': async (form) => {
             res.render('products/update_item', {
                 'form': form.toHTML(bootstrapField)
             })
@@ -343,7 +400,7 @@ router.post('/toppings/:topping_id/update', async(req, res) => {
 
 
 // TOPPING DELETE
-router.get('/toppings/:topping_id/delete', async(req, res) => {
+router.get('/toppings/:topping_id/delete', async (req, res) => {
     // fetch the toppings to delete
     const toppingId = req.params.topping_id
     const topping = await dataLayer.getToppingById(toppingId)
@@ -354,7 +411,7 @@ router.get('/toppings/:topping_id/delete', async(req, res) => {
     })
 })
 
-router.post('/toppings/:topping_id/delete', async(req, res) => {
+router.post('/toppings/:topping_id/delete', async (req, res) => {
     const toppingId = req.params.topping_id
     const topping = await dataLayer.getToppingById(toppingId)
     await topping.destroy();
@@ -363,7 +420,7 @@ router.post('/toppings/:topping_id/delete', async(req, res) => {
 })
 
 // DOUGHTYPE CREATE 
-router.get('/doughtypes/create', async(req, res) => {
+router.get('/doughtypes/create', async (req, res) => {
 
     const allIngredients = await dataLayer.getAllIngredients()
     const doughTypeForm = createDoughTypeForm(allIngredients);
@@ -373,11 +430,11 @@ router.get('/doughtypes/create', async(req, res) => {
     })
 })
 
-router.post('/doughtypes/create', async(req, res) => {
+router.post('/doughtypes/create', async (req, res) => {
     const allIngredients = await dataLayer.getAllIngredients()
     const doughTypeForm = createDoughTypeForm(allIngredients);
     doughTypeForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             let { ingredients, ...doughTypeData } = form.data;
             const doughtype = new DoughType(doughTypeData);
             await doughtype.save();
@@ -387,7 +444,7 @@ router.post('/doughtypes/create', async(req, res) => {
             req.flash("success_message", `${doughtype.get('name')} has been created`)
             res.redirect('/products?tab=doughtypes');
         },
-        'error': async(form) => {
+        'error': async (form) => {
             res.render("products/create_doughtype", {
                 'form': form.toHTML(bootstrapField)
             })
@@ -397,7 +454,7 @@ router.post('/doughtypes/create', async(req, res) => {
 })
 
 // DOUGHTYPE UPDATE 
-router.get('/doughtypes/:dough_type_id/update', async(req, res) => {
+router.get('/doughtypes/:dough_type_id/update', async (req, res) => {
     // retrieve the product
     const doughtypeId = req.params.dough_type_id
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
@@ -420,7 +477,7 @@ router.get('/doughtypes/:dough_type_id/update', async(req, res) => {
 
 })
 
-router.post('/doughtypes/:dough_type_id/update', async(req, res) => {
+router.post('/doughtypes/:dough_type_id/update', async (req, res) => {
     // fetch the doughtype that we want to update
     const doughtypeId = req.params.dough_type_id
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
@@ -428,7 +485,7 @@ router.post('/doughtypes/:dough_type_id/update', async(req, res) => {
     // process the form
     const doughTypeForm = createDoughTypeForm();
     doughTypeForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             let { ingredients, ...doughTypeData } = form.data;
             doughtype.set(doughTypeData);
             doughtype.save();
@@ -440,7 +497,7 @@ router.post('/doughtypes/:dough_type_id/update', async(req, res) => {
             req.flash("success_message", `${doughtype.get('name')} has been updated`)
             res.redirect('/products?tab=doughtypes');
         },
-        'error': async(form) => {
+        'error': async (form) => {
             res.render('products/update_doughtype', {
                 'form': form.toHTML(bootstrapField)
             })
@@ -450,7 +507,7 @@ router.post('/doughtypes/:dough_type_id/update', async(req, res) => {
 })
 
 // DOUGHTYPE DELETE
-router.get("/doughtypes/:dough_type_id/delete", async(req, res) => {
+router.get("/doughtypes/:dough_type_id/delete", async (req, res) => {
     // fetch the ingredients to delete
     const doughtypeId = req.params.dough_type_id
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
@@ -461,7 +518,7 @@ router.get("/doughtypes/:dough_type_id/delete", async(req, res) => {
     })
 })
 
-router.post("/doughtypes/:dough_type_id/delete", async(req, res) => {
+router.post("/doughtypes/:dough_type_id/delete", async (req, res) => {
     const doughtypeId = req.params.dough_type_id
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
     await doughtype.destroy();
@@ -470,24 +527,24 @@ router.post("/doughtypes/:dough_type_id/delete", async(req, res) => {
 })
 
 //INGREDIENTS CREATE 
-router.get('/ingredients/create', async(req, res) => {
+router.get('/ingredients/create', async (req, res) => {
     const ingredientForm = createIngredientForm();
     res.render('products/create_ingredient', {
         'form': ingredientForm.toHTML(bootstrapField)
     })
 })
 
-router.post('/ingredients/create', async(req, res) => {
+router.post('/ingredients/create', async (req, res) => {
     const ingredientForm = createIngredientForm();
     ingredientForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             const ingredient = new Ingredient();
             ingredient.set('name', form.data.name);
             await ingredient.save();
             req.flash("success_message", `${ingredient.get('name')} has been created`)
             res.redirect('/products?tab=ingredients');
         },
-        'error': async(form) => {
+        'error': async (form) => {
             res.render("products/create_ingredient", {
                 'form': form.toHTML(bootstrapField)
             })
@@ -497,7 +554,7 @@ router.post('/ingredients/create', async(req, res) => {
 })
 
 // INGREDIENTS UPDATE 
-router.get('/ingredients/:ingredient_id/update', async(req, res) => {
+router.get('/ingredients/:ingredient_id/update', async (req, res) => {
     // retrieve the ingredients
     const ingredientId = req.params.ingredient_id
     const ingredient = await dataLayer.getIngredientById(ingredientId)
@@ -515,7 +572,7 @@ router.get('/ingredients/:ingredient_id/update', async(req, res) => {
 
 })
 
-router.post('/ingredients/:ingredient_id/update', async(req, res) => {
+router.post('/ingredients/:ingredient_id/update', async (req, res) => {
     // get the ingredient to update
     const ingredientId = req.params.ingredient_id
     const ingredient = await dataLayer.getIngredientById(ingredientId)
@@ -523,13 +580,13 @@ router.post('/ingredients/:ingredient_id/update', async(req, res) => {
     // process the form
     const ingredientForm = createIngredientForm();
     ingredientForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             ingredient.set(form.data)
             ingredient.save();
             req.flash("success_message", `${ingredient.get('name')} has been updated`)
             res.redirect('/products?tab=ingredients');
         },
-        'error': async(form) => {
+        'error': async (form) => {
             res.render('products/update_item', {
                 'form': form.toHTML(bootstrapField)
             })
@@ -540,7 +597,7 @@ router.post('/ingredients/:ingredient_id/update', async(req, res) => {
 })
 
 // INGREDIENTS DELETE 
-router.get("/ingredients/:ingredient_id/delete", async(req, res) => {
+router.get("/ingredients/:ingredient_id/delete", async (req, res) => {
     // fetch the ingredients to delete
     const ingredientId = req.params.ingredient_id
     const ingredient = await dataLayer.getIngredientById(ingredientId)
@@ -551,7 +608,7 @@ router.get("/ingredients/:ingredient_id/delete", async(req, res) => {
     })
 })
 
-router.post('/ingredients/:ingredient_id/delete', async(req, res) => {
+router.post('/ingredients/:ingredient_id/delete', async (req, res) => {
     const ingredientId = req.params.ingredient_id
     const ingredient = await dataLayer.getIngredientById(ingredientId)
     await ingredient.destroy();

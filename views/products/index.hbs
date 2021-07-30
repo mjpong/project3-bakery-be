@@ -1,8 +1,19 @@
 {{#extends 'base'}}
 
-{{#block 'content'}}<div class="container">
+{{#block 'content'}}
+
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-12">
+        <div class="col-3">
+            <form method="GET">
+                {{{form}}}
+                <input type="submit" class="btn btn-primary" value="Search" />
+                
+            </form>
+            <button id="clear-filter" class="btn btn-warning">Rest </button>
+        </div>
+        <div class="col-9">
             <ul class="nav nav-tabs" id="myTab">
                 <li class="nav-item">
                     <a class="nav-link active" href="#cinnamonrolls" data-toggle="tab">Cinnamon Rolls</a>
@@ -267,6 +278,19 @@
 
     var triggerEl = document.querySelector(`a[href="#${tab}"]`)
     $(triggerEl).tab('show');
+
+    document.querySelector("#clear-filter").addEventListener("click", function (){
+        console.log(1);
+        let inputs = document.querySelectorAll("input[type=text]");
+        for(let i = 0; i < inputs.length; i++){
+            inputs[i].value = "";
+        }
+
+        let selects = document.querySelectorAll("select");
+        for(let i = 0; i < selects.length; i++){
+            selects[i].value = 0;
+        }
+    })
 
 </script>
 {{/block}}

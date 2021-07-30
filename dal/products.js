@@ -51,7 +51,10 @@ const getIngredientById = async (ingredientId) => {
 
 
 const getAllProducts = async () => {
-    return await Product.fetchAll()
+    return await Product.fetchAll({
+        require: true,
+        withRelated: ['flavor', "dough_type", "toppings"]
+    })
 }
 
 const getAllFlavors = async () => {
@@ -67,10 +70,14 @@ const getAllToppings = async () => {
 }
 
 const getAllDoughTypes = async () => {
-    return await DoughType.fetchAll().map((doughtype) => {
+    return await DoughType.fetchAll({
+        require: true,
+        withRelated: ['ingredients']
+    }).map((doughtype) => {
         return [doughtype.get('id'), doughtype.get('name')];
     })
 }
+
 
 const getAllIngredients = async () => {
     return await Ingredient.fetchAll().map(ingredient => {

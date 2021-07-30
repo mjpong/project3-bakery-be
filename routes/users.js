@@ -160,7 +160,10 @@ router.post("/profile/update", async(req, res) => {
 //PROFILE
 router.get('/profile', async (req, res) => {
     const user = req.session.user;
-
+    if (!user) {
+        req.flash('error_messages', 'Please login to view this page');
+        res.redirect('/users/login');
+    }
     let profile = await User.where({
         "id": user.id
     }).fetch({
