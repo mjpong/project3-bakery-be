@@ -6,7 +6,7 @@ const widgets = forms.widgets;
 
 // forms boilerplate
 
-var bootstrapField = function(name, object) {
+var bootstrapField = function (name, object) {
     if (!Array.isArray(object.widget.classes)) {
         object.widget.classes = [];
     }
@@ -338,7 +338,7 @@ const createSearchForm = (flavors, toppings, dough_types) => {
             cssClasses: {
                 label: ['form-label']
             },
-            validators:[validators.integer(), validators.min(0)]
+            validators: [validators.integer(), validators.min(0)]
         }),
         'max_price': fields.string({
             required: false,
@@ -346,7 +346,7 @@ const createSearchForm = (flavors, toppings, dough_types) => {
             cssClasses: {
                 label: ['form-label']
             },
-            validators:[validators.integer(), validators.min(0)]
+            validators: [validators.integer(), validators.min(0)]
         }),
         "flavor_id": fields.string({
             label: "Flavor",
@@ -394,6 +394,51 @@ const createOrderUpdateForm = (status) => {
     })
 }
 
+const createOrderSearchForm = (status) => {
+    return forms.create({
+        "status_id": fields.string({
+            label: "Status",
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ["form-label"],
+            },
+            widget: widgets.select(),
+            choices: status
+        }),
+        "order_id": fields.number({
+            required: false,
+            cssClasses: {
+                label: ["form-label"],
+            },
+        }),
+        "user_id": fields.number({
+            required: false,
+            cssClasses: {
+                label: ["form-label"],
+            },
+        }),
+        "reciever_name": fields.string({
+            required: false,
+            cssClasses: {
+                label: ["form-label"],
+            },
+        }),
+        "min_cost": fields.number({
+            required: false,
+            cssClasses: {
+                label: ["form-label"],
+            },
+        }),
+        "max_cost": fields.number({
+            required: false,
+            cssClasses: {
+                label: ["form-label"],
+            },
+        })
+    })
+}
+
 
 module.exports = {
     createFlavorForm,
@@ -406,5 +451,6 @@ module.exports = {
     createLoginForm,
     createSearchForm,
     createOrderUpdateForm,
+    createOrderSearchForm,
     bootstrapField
 };

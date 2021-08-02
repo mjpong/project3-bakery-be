@@ -49,13 +49,39 @@ const getIngredientById = async (ingredientId) => {
     });
 }
 
-
 const getAllProducts = async () => {
     return await Product.fetchAll({
         require: true,
         withRelated: ['flavor', "dough_type", "toppings"]
     })
 }
+
+const getFlavors = async () => {
+    return await Flavor.fetchAll({
+        require: true
+    })
+}
+
+const getToppings = async () => {
+    return await Topping.fetchAll({
+        require: true
+    })
+}
+
+const getDoughTypes = async () => {
+    return await DoughType.fetchAll({
+        require: true,
+        withRelated: ['ingredients']
+    })
+}
+
+const getIngredients = async () => {
+    return await Ingredient.fetchAll({
+        require: true
+    })
+}
+
+// for forms
 
 const getAllFlavors = async () => {
     return await Flavor.fetchAll().map((flavor) => {
@@ -95,5 +121,10 @@ module.exports = {
     getAllFlavors,
     getAllToppings,
     getAllDoughTypes,
-    getAllIngredients
+    getAllIngredients,
+    getDoughTypes,
+    getFlavors,
+    getIngredients,
+    getToppings
+
 }

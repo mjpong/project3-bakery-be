@@ -3,32 +3,32 @@ const router = express.Router();
 const productDataLayer = require('../../dal/products')
 const { Product } = require('../../models');
 
-router.get('/', async(req, res) => {
+router.get('/', async (req, res) => {
     const allProducts = await productDataLayer.getAllProducts()
     res.send(allProducts)
 })
 
-router.get('/flavors', async(req, res) => {
+router.get('/flavors', async (req, res) => {
     const allFlavors = await productDataLayer.getAllFlavors()
     res.send(allFlavors)
 })
 
-router.get('/toppings', async(req, res) => {
+router.get('/toppings', async (req, res) => {
     const allToppings = await productDataLayer.getAllToppings()
     res.send(allToppings)
 })
 
-router.get('/doughtypes', async(req, res) => {
+router.get('/doughtypes', async (req, res) => {
     const allDoughTypes = await productDataLayer.getAllDoughTypes()
     res.send(allDoughTypes)
 })
 
-router.get('/ingredients', async(req, res) => {
+router.get('/ingredients', async (req, res) => {
     const allIngredients = await productDataLayer.getAllIngredients()
     res.send(allIngredients)
 })
 
-router.post('/search', async(req, res) => {
+router.post('/search', async (req, res) => {
     let q = Product.collection();
     if (req.body.name) {
         q = q.where("name", "like", "%" + req.body.name + "%")
@@ -47,7 +47,7 @@ router.post('/search', async(req, res) => {
     res.send(completeSearch)
 })
 
-router.get('/:product_id', async(req, res) => {
+router.get('/:product_id', async (req, res) => {
     const productId = req.params.product_id
     const getProductById = await productDataLayer.getProductById(productId);
     res.send(getProductById)

@@ -72,7 +72,7 @@ router.get('/:user_id', async (req, res) => {
         payment_method_types: ['card'],
         line_items: lineItems,
         success_url: process.env.STRIPE_SUCCESS_URL + '/' + newOrderId + "?payment=success",
-        cancel_url: process.env.STRIPE_ERROR_URL,
+        cancel_url: process.env.STRIPE_ERROR_URL + '/' + newOrderId + "?payment=fail",
         metadata: {
             'orders': metaData,
             'order_id': newOrder.get("id")
@@ -88,6 +88,11 @@ router.get('/:user_id', async (req, res) => {
     })
 
 })
+
+// if payment failed, and user want to pay again
+// router.get(":order_id", async(req,res) => {
+
+// })
 
 //post for stripe to retrieve data via webhook
 router.post('/process_payment', express.json({ type: 'application/json' }), async (req, res) => {

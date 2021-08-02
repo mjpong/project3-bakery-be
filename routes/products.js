@@ -30,15 +30,26 @@ const { checkIfAuth } = require('../middleware')
 //  #2 Add a new route to the Express router
 router.get('/', async (req, res) => {
     let allProducts = await dataLayer.getAllProducts()
+    // search form
     let allIngredients = await dataLayer.getAllIngredients()
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()
     const allToppings = await dataLayer.getAllToppings()
 
+    // browse
+    let flavors = await dataLayer.getFlavors()
+    let doughtypes = await dataLayer.getDoughTypes()
+    let toppings = await dataLayer.getToppings()
+    let ingredients = await dataLayer.getIngredients()
+
+    console.log(flavors.toJSON())
+
+
     allFlavors.unshift([0, "-"])
     allDoughTypes.unshift([0, "-"])
     allToppings.unshift([0, "-"])
     const searchForm = createSearchForm(allFlavors, allToppings, allDoughTypes)
+
 
     //query connector
     let q = Product.collection()
@@ -48,10 +59,17 @@ router.get('/', async (req, res) => {
             let products = await q.fetch({
                 withRelated: ['toppings', "dough_type", "flavor", "dough_type.ingredients"]
             })
+
             res.render("products/index", {
                 'products': products.toJSON(),
+                'flavors': flavors.toJSON(),
+                'ingredients': ingredients,
+                'doughtypes': doughtypes,
+                'toppings': toppings,
                 'form': form.toHTML(bootstrapField)
             })
+
+
         },
         "error": async (form) => {
             let products = await q.fetch({
@@ -59,6 +77,10 @@ router.get('/', async (req, res) => {
             })
             res.render("products/index", {
                 'products': products.toJSON(),
+                'flavors': flavors.toJSON(),
+                'ingredients': ingredients,
+                'doughtypes': doughtypes,
+                'toppings': toppings,
                 'form': form.toHTML(bootstrapField)
             })
 
@@ -83,13 +105,17 @@ router.get('/', async (req, res) => {
             if (form.data.toppings) {
                 q = q.query("join", "products_toppings", "products.id", "product_id").where("topping_id", "in", form.data.toppings.split(","))
             }
-            
+
             let products = await q.fetch({
                 withRelated: ['flavor', "dough_type", "toppings"]
             })
 
             res.render("products/index", {
                 'products': products.toJSON(),
+                'flavors': flavors.toJSON(),
+                'ingredients': ingredients,
+                'doughtypes': doughtypes,
+                'toppings': toppings,
                 'form': form.toHTML(bootstrapField)
             })
 

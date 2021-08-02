@@ -1,6 +1,6 @@
 const dataLayer = require('../dal/orders');
 
-class OrderServices{
+class OrderServices {
     constructor(user_id) {
         this.user_id = user_id
     }
@@ -13,6 +13,9 @@ class OrderServices{
         return await dataLayer.getOrderById(id)
     }
 
+    async getAllStatus() {
+        return await dataLayer.getAllOrderStatus()
+    }
 
 
 
