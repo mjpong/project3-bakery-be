@@ -26,7 +26,7 @@ router.get('/register', (req, res) => {
 router.post('/register', (req, res) => {
     const registerForm = createUserForm()
     registerForm.handle(req, {
-        "success": async(form) => {
+        "success": async (form) => {
             let emailCheck = await User.where({
                 "email": form.data.email
             }).fetch({
@@ -63,17 +63,17 @@ router.get('/login', (req, res) => {
     })
 })
 
-router.post('/login', async(req, res) => {
+router.post('/login', async (req, res) => {
     const loginForm = createLoginForm();
     loginForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             let user = await User.where({
-                    "email": form.data.email,
-                    "role":2
-                }).fetch({
-                    require: false
-                })
-                // check pw if user exist
+                "email": form.data.email,
+                "role": 2
+            }).fetch({
+                require: false
+            })
+            // check pw if user exist
             if (user) {
                 if (user.get("password") == getHash(form.data.password)) {
                     req.session.user = {
@@ -102,25 +102,25 @@ router.post('/login', async(req, res) => {
 })
 
 // UPDATE USER 
-router.get("/profile/update", async(req, res) => {
+router.get("/profile/update", async (req, res) => {
     if (req.session.user == undefined) {
         req.flash("error_message", "Please login to your account.")
         res.redirect("/users/login")
     } else {
         const user = await User.where({
-                "email": req.session.user.email
-            }).fetch({
-                require: false
-            })
-            // Create profile form 
+            "email": req.session.user.email
+        }).fetch({
+            require: false
+        })
+        // Create profile form 
         const updateForm = createUpdateUserForm()
-            // Fill in all the value
+        // Fill in all the value
         updateForm.fields.name.value = user.get("name")
         updateForm.fields.email.value = user.get("email")
         updateForm.fields.dob.value = user.get("dob")
         updateForm.fields.phone.value = user.get("phone")
         updateForm.fields.address.value = user.get("address")
-            // Render page
+        // Render page
 
         res.render("users/update", {
             "form": updateForm.toHTML(bootstrapField)
@@ -128,7 +128,7 @@ router.get("/profile/update", async(req, res) => {
     }
 })
 
-router.post("/profile/update", async(req, res) => {
+router.post("/profile/update", async (req, res) => {
     const user = await User.where({
         'email': req.session.user.email
     }).fetch({
@@ -136,7 +136,7 @@ router.post("/profile/update", async(req, res) => {
     })
     const updateForm = createUpdateUserForm()
     updateForm.handle(req, {
-        'success': async(form) => {
+        'success': async (form) => {
             let { confirm_password, ...userData } = form.data
             userData.password = getHash(userData.password)
             user.set(userData)
@@ -149,7 +149,7 @@ router.post("/profile/update", async(req, res) => {
             req.flash('success_message', "Profile Updated")
             res.redirect("/products")
         },
-        "error": async(form) => {
+        "error": async (form) => {
             res.render("users/update", {
                 "form": form.toHTML(bootstrapField)
             })
@@ -169,12 +169,17 @@ router.get('/profile', async (req, res) => {
     }).fetch({
         require: false
     })
+
+    const profileJSON = profile.toJSON()
+    let dob = profileJSON.dob;
+    profileJSON['dobShort'] = dob.toLocaleDateString('en-GB')
+
     if (!profile) {
         req.flash('error_messages', 'Please login to view this page');
         res.redirect('/users/login');
     } else {
         res.render('users/profile', {
-            'user': profile.toJSON()
+            'user': profileJSON
         })
     }
 })

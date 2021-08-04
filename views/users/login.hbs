@@ -7,11 +7,9 @@
     <form method="POST" style="width:100%">
         <input type="hidden" name="_csrf" value="{{csrfToken}}" />
         {{{form}}}
-        <div style="display:flex">
-            <input type="submit" value="Login" class="btn btn-primary">
-        </div>
+        <input type="submit" value="Login" class="btn allbtn">
     </form>
-    <a href="/users/register" class="create-account">No account? Create a new account here</a>
+    <a href="/users/register" class="create-account nav-link">No account? Create a new account here</a>
 </div>
 
 
