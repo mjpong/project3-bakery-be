@@ -28,7 +28,7 @@ const dataLayer = require('../dal/products')
 const { checkIfAuth } = require('../middleware')
 
 //  #2 Add a new route to the Express router
-router.get('/', async (req, res) => {
+router.get('/', checkIfAuth, async (req, res) => {
     let allProducts = await dataLayer.getAllProducts()
     // search form
     let allIngredients = await dataLayer.getAllIngredients()
@@ -135,7 +135,7 @@ router.get('/', async (req, res) => {
 })
 
 // PRODUCT CREATE
-router.get('/create', async (req, res) => {
+router.get('/create', checkIfAuth, async (req, res) => {
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()
     const allToppings = await dataLayer.getAllToppings()
@@ -147,7 +147,7 @@ router.get('/create', async (req, res) => {
     })
 })
 
-router.post('/create', async (req, res) => {
+router.post('/create', checkIfAuth, async (req, res) => {
 
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()
@@ -176,7 +176,7 @@ router.post('/create', async (req, res) => {
 })
 
 // PRODUCT UPDATE
-router.get('/:product_id/update', async (req, res) => {
+router.get('/:product_id/update', checkIfAuth, async (req, res) => {
     // retrieve the product
     const productId = req.params.product_id
     const product = await dataLayer.getProductById(productId)
@@ -204,7 +204,7 @@ router.get('/:product_id/update', async (req, res) => {
 
 })
 
-router.post('/:product_id/update', async (req, res) => {
+router.post('/:product_id/update', checkIfAuth, async (req, res) => {
 
     // fetch the product that we want to update
     const productId = req.params.product_id
@@ -240,7 +240,7 @@ router.post('/:product_id/update', async (req, res) => {
 })
 
 // PRODUCT DELETE
-router.get('/:product_id/delete', async (req, res) => {
+router.get('/:product_id/delete', checkIfAuth, async (req, res) => {
     // fetch the product that we want to delete
     const productId = req.params.product_id
     const product = await dataLayer.getProductById(productId)
@@ -250,7 +250,7 @@ router.get('/:product_id/delete', async (req, res) => {
     })
 });
 
-router.post('/:product_id/delete', async (req, res) => {
+router.post('/:product_id/delete', checkIfAuth, async (req, res) => {
     // fetch the product that we want to delete
     const productId = req.params.product_id
     const product = await dataLayer.getProductById(productId)
@@ -260,14 +260,14 @@ router.post('/:product_id/delete', async (req, res) => {
 })
 
 // FLAVOR CREATE
-router.get('/flavors/create', async (req, res) => {
+router.get('/flavors/create', checkIfAuth, async (req, res) => {
     const flavorForm = createFlavorForm();
     res.render('products/create_flavor', {
         'form': flavorForm.toHTML(bootstrapField)
     })
 })
 
-router.post('/flavors/create', async (req, res) => {
+router.post('/flavors/create', checkIfAuth, async (req, res) => {
 
     const flavorForm = createFlavorForm();
     flavorForm.handle(req, {
@@ -288,7 +288,7 @@ router.post('/flavors/create', async (req, res) => {
 })
 
 // FLAVOR UPDATE
-router.get('/flavors/:flavor_id/update', async (req, res) => {
+router.get('/flavors/:flavor_id/update', checkIfAuth, async (req, res) => {
     // retrieve the flavor
     const flavorId = req.params.flavor_id
     const flavor = await dataLayer.getFlavorById(flavorId)
@@ -304,7 +304,7 @@ router.get('/flavors/:flavor_id/update', async (req, res) => {
 
 })
 
-router.post('/flavors/:flavor_id/update', async (req, res) => {
+router.post('/flavors/:flavor_id/update', checkIfAuth, async (req, res) => {
     // fetch all the flavors
     const allFlavors = await dataLayer.getAllFlavors()
 
@@ -331,7 +331,7 @@ router.post('/flavors/:flavor_id/update', async (req, res) => {
 })
 
 // FLAVOR DELETE
-router.get('/flavors/:flavor_id/delete', async (req, res) => {
+router.get('/flavors/:flavor_id/delete', checkIfAuth, async (req, res) => {
     // fetch the flavors to delete
     const flavorId = req.params.flavor_id
     const flavor = await dataLayer.getFlavorById(flavorId)
@@ -342,7 +342,7 @@ router.get('/flavors/:flavor_id/delete', async (req, res) => {
     })
 })
 
-router.post('/flavors/:flavor_id/delete', async (req, res) => {
+router.post('/flavors/:flavor_id/delete', checkIfAuth, async (req, res) => {
     const flavorId = req.params.flavor_id
     const flavor = await dataLayer.getFlavorById(flavorId)
     await flavor.destroy();
@@ -351,14 +351,14 @@ router.post('/flavors/:flavor_id/delete', async (req, res) => {
 })
 
 // TOPPING CREATE
-router.get('/toppings/create', async (req, res) => {
+router.get('/toppings/create', checkIfAuth, async (req, res) => {
     const toppingForm = createToppingForm();
     res.render('products/create_topping', {
         'form': toppingForm.toHTML(bootstrapField)
     })
 })
 
-router.post('/toppings/create', async (req, res) => {
+router.post('/toppings/create', checkIfAuth, async (req, res) => {
     const toppingForm = createToppingForm();
     toppingForm.handle(req, {
         'success': async (form) => {
@@ -378,7 +378,7 @@ router.post('/toppings/create', async (req, res) => {
 })
 
 // TOPPING UPDATE
-router.get('/toppings/:topping_id/update', async (req, res) => {
+router.get('/toppings/:topping_id/update', checkIfAuth, async (req, res) => {
     // retrieve the toppings
     const toppingId = req.params.topping_id
     const topping = await dataLayer.getToppingById(toppingId)
@@ -396,7 +396,7 @@ router.get('/toppings/:topping_id/update', async (req, res) => {
 
 })
 
-router.post('/toppings/:topping_id/update', async (req, res) => {
+router.post('/toppings/:topping_id/update', checkIfAuth, async (req, res) => {
     // get the topping to update
     const toppingId = req.params.topping_id
     const topping = await dataLayer.getToppingById(toppingId)
@@ -422,7 +422,7 @@ router.post('/toppings/:topping_id/update', async (req, res) => {
 
 
 // TOPPING DELETE
-router.get('/toppings/:topping_id/delete', async (req, res) => {
+router.get('/toppings/:topping_id/delete', checkIfAuth, async (req, res) => {
     // fetch the toppings to delete
     const toppingId = req.params.topping_id
     const topping = await dataLayer.getToppingById(toppingId)
@@ -433,7 +433,7 @@ router.get('/toppings/:topping_id/delete', async (req, res) => {
     })
 })
 
-router.post('/toppings/:topping_id/delete', async (req, res) => {
+router.post('/toppings/:topping_id/delete', checkIfAuth, async (req, res) => {
     const toppingId = req.params.topping_id
     const topping = await dataLayer.getToppingById(toppingId)
     await topping.destroy();
@@ -442,7 +442,7 @@ router.post('/toppings/:topping_id/delete', async (req, res) => {
 })
 
 // DOUGHTYPE CREATE 
-router.get('/doughtypes/create', async (req, res) => {
+router.get('/doughtypes/create', checkIfAuth, async (req, res) => {
 
     const allIngredients = await dataLayer.getAllIngredients()
     const doughTypeForm = createDoughTypeForm(allIngredients);
@@ -452,7 +452,7 @@ router.get('/doughtypes/create', async (req, res) => {
     })
 })
 
-router.post('/doughtypes/create', async (req, res) => {
+router.post('/doughtypes/create', checkIfAuth, async (req, res) => {
     const allIngredients = await dataLayer.getAllIngredients()
     const doughTypeForm = createDoughTypeForm(allIngredients);
     doughTypeForm.handle(req, {
@@ -476,7 +476,7 @@ router.post('/doughtypes/create', async (req, res) => {
 })
 
 // DOUGHTYPE UPDATE 
-router.get('/doughtypes/:dough_type_id/update', async (req, res) => {
+router.get('/doughtypes/:dough_type_id/update', checkIfAuth, async (req, res) => {
     // retrieve the product
     const doughtypeId = req.params.dough_type_id
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
@@ -499,7 +499,7 @@ router.get('/doughtypes/:dough_type_id/update', async (req, res) => {
 
 })
 
-router.post('/doughtypes/:dough_type_id/update', async (req, res) => {
+router.post('/doughtypes/:dough_type_id/update', checkIfAuth, async (req, res) => {
     // fetch the doughtype that we want to update
     const doughtypeId = req.params.dough_type_id
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
@@ -529,7 +529,7 @@ router.post('/doughtypes/:dough_type_id/update', async (req, res) => {
 })
 
 // DOUGHTYPE DELETE
-router.get("/doughtypes/:dough_type_id/delete", async (req, res) => {
+router.get("/doughtypes/:dough_type_id/delete", checkIfAuth, async (req, res) => {
     // fetch the ingredients to delete
     const doughtypeId = req.params.dough_type_id
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
@@ -540,7 +540,7 @@ router.get("/doughtypes/:dough_type_id/delete", async (req, res) => {
     })
 })
 
-router.post("/doughtypes/:dough_type_id/delete", async (req, res) => {
+router.post("/doughtypes/:dough_type_id/delete", checkIfAuth, async (req, res) => {
     const doughtypeId = req.params.dough_type_id
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
     await doughtype.destroy();
@@ -549,14 +549,14 @@ router.post("/doughtypes/:dough_type_id/delete", async (req, res) => {
 })
 
 //INGREDIENTS CREATE 
-router.get('/ingredients/create', async (req, res) => {
+router.get('/ingredients/create', checkIfAuth, async (req, res) => {
     const ingredientForm = createIngredientForm();
     res.render('products/create_ingredient', {
         'form': ingredientForm.toHTML(bootstrapField)
     })
 })
 
-router.post('/ingredients/create', async (req, res) => {
+router.post('/ingredients/create', checkIfAuth, async (req, res) => {
     const ingredientForm = createIngredientForm();
     ingredientForm.handle(req, {
         'success': async (form) => {
@@ -576,7 +576,7 @@ router.post('/ingredients/create', async (req, res) => {
 })
 
 // INGREDIENTS UPDATE 
-router.get('/ingredients/:ingredient_id/update', async (req, res) => {
+router.get('/ingredients/:ingredient_id/update', checkIfAuth, async (req, res) => {
     // retrieve the ingredients
     const ingredientId = req.params.ingredient_id
     const ingredient = await dataLayer.getIngredientById(ingredientId)
@@ -594,7 +594,7 @@ router.get('/ingredients/:ingredient_id/update', async (req, res) => {
 
 })
 
-router.post('/ingredients/:ingredient_id/update', async (req, res) => {
+router.post('/ingredients/:ingredient_id/update', checkIfAuth, async (req, res) => {
     // get the ingredient to update
     const ingredientId = req.params.ingredient_id
     const ingredient = await dataLayer.getIngredientById(ingredientId)
@@ -619,7 +619,7 @@ router.post('/ingredients/:ingredient_id/update', async (req, res) => {
 })
 
 // INGREDIENTS DELETE 
-router.get("/ingredients/:ingredient_id/delete", async (req, res) => {
+router.get("/ingredients/:ingredient_id/delete", checkIfAuth, async (req, res) => {
     // fetch the ingredients to delete
     const ingredientId = req.params.ingredient_id
     const ingredient = await dataLayer.getIngredientById(ingredientId)
@@ -630,7 +630,7 @@ router.get("/ingredients/:ingredient_id/delete", async (req, res) => {
     })
 })
 
-router.post('/ingredients/:ingredient_id/delete', async (req, res) => {
+router.post('/ingredients/:ingredient_id/delete', checkIfAuth, async (req, res) => {
     const ingredientId = req.params.ingredient_id
     const ingredient = await dataLayer.getIngredientById(ingredientId)
     await ingredient.destroy();

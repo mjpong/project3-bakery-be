@@ -1,7 +1,7 @@
 const express = require("express");
 // #1 Create a new express Router
 const router = express.Router();
-const { Order, OrderStatus, Product, OrderProduct } = require("../models")
+const { Order } = require("../models")
 const { bootstrapField, createOrderUpdateForm, createOrderSearchForm } = require('../forms');
 // import in DAL
 const dataLayer = require('../dal/orders');
@@ -11,7 +11,7 @@ const OrderServices = require("../services/OrderServices");
 
 //  #2 Add a new route to the Express router
 // All Orders
-router.get('/', async (req, res) => {
+router.get('/', checkIfAuth, async (req, res) => {
 
     const orderServices = new OrderServices()
     let allOrders = await orderServices.getAll()
@@ -122,7 +122,7 @@ router.get('/', async (req, res) => {
 })
 
 // get specific order by id
-router.get("/:order_id", async (req, res) => {
+router.get("/:order_id", checkIfAuth, async (req, res) => {
     const orderId = req.params.order_id
     const order = await dataLayer.getOrderById(orderId)
     const orderJSON = order.toJSON()
@@ -153,7 +153,7 @@ router.get("/:order_id", async (req, res) => {
 
 })
 
-router.post('/:order_id', async (req, res) => {
+router.post('/:order_id', checkIfAuth, async (req, res) => {
     const orderId = req.params.order_id
     const order = await dataLayer.getOrderById(orderId)
     const allOrderStatus = await dataLayer.getAllOrderStatus()
@@ -181,7 +181,7 @@ router.post('/:order_id', async (req, res) => {
     })
 })
 
-router.get("/:order_id/delete", async (req, res) => {
+router.get("/:order_id/delete", checkIfAuth, async (req, res) => {
     const orderId = req.params.order_id
     const order = await dataLayer.getOrderById(orderId)
     res.render("orders/delete", {
@@ -189,7 +189,7 @@ router.get("/:order_id/delete", async (req, res) => {
     })
 })
 
-router.post("/:order_id/delete", async (req, res) => {
+router.post("/:order_id/delete", checkIfAuth, async (req, res) => {
     const orderId = req.params.order_id
     const order = await dataLayer.getOrderById(orderId)
     await order.destroy()
