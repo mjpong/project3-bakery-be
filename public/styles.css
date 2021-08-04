@@ -1,3 +1,60 @@
-.navbar {
-    background-color: #FFEFD4;
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
+
+body {
+    font-family: 'Roboto Slab', serif;
+    min-height: 100vh;
+}
+.hero-image {
+    background-image: linear-gradient(rgba(230, 215, 174, 0.5), rgba(240, 238, 229, 0.616)), url("./hero.jpeg");
+    height:80vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+.hero-wrapper{
+    position: absolute; 
+    left: 35%;
+    top: 38%;
+    background-color: rgba(231, 226, 207, 0.76);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.hero-button {
+    text-align: center;
+    position: center;
+    text-decoration: none;
+}
+
+.hero-text, .nav-link{
+    color: #C85103;
+}
+
+.nav-link:hover{
+    color: #e45b00;
+}
+
+.allbtn {
+    border: 1.5px solid #db693c;
+    text-transform: uppercase;
+    color: #272727;
+    text-align: center;
+    padding: 5px 10px;
+    background:transparent;
+    border-radius: 4px;
+}
+
+.allbtn:hover {
+    color: #e45b00;
+    text-decoration: none;
+    cursor:pointer
+}
+
+.product-image{
+    width:100%;
+    height:90%;
+    background-size:cover;
+    background-position: center;
 }

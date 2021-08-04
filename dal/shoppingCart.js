@@ -1,6 +1,6 @@
-const {ShoppingCartItem, Product} = require("../models")
+const { ShoppingCartItem, Product } = require("../models")
 
-const getAllItems = async(userId) => {
+const getAllItems = async (userId) => {
 
     return await ShoppingCartItem.collection().where({
         "user_id": userId
@@ -28,9 +28,7 @@ const getItemById = async (id) => {
 }
 
 const removeItem = async (id) => {
-    console.log(id);
-    const item = await ShoppingCartItem.where({"id": id}).fetch();
-    console.log(item);
+    const item = await ShoppingCartItem.where({ "id": id }).fetch();
     if (item) {
         item.destroy();
         return true

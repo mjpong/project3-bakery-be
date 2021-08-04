@@ -1,18 +1,35 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
-<h1>Update Cinnamon Roll: {{product.name}}</h1>
-<form method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
-    {{{form}}}
-    <div>
-    <p>Image:</p>
-    <input type="hidden" role="uploadcare-uploader" id="uploadcare" name="image" value="{{image}}"/>
+<div class="container-fluid mb-5">
+    <div class="row">
+        <h1 class="col-9">Update Cinnamon Roll: {{product.name}}</h1>
+        <div class="col-3">
+            <a href='/products/{{product.id}}/delete' class="btn allbtn">Delete</a>
+        </div>
     </div>
-    <input type="submit" value="Update Product" class="btn btn-primary" />
-    <a class="btn btn-primary" href="/products">Cancel</a>
+    <hr>
+    </hr>
+    <div class="row">
+        <form method="POST" class="col-6">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}" />
 
-</form>
+            {{{form}}}
+
+
+            <div>
+                <p>Image:</p>
+                <input type="hidden" role="uploadcare-uploader" id="uploadcare" name="image" value="{{image}}" />
+            </div>
+            <input type="submit" value="Update Product" class="btn allbtn" />
+            <a class="btn allbtn" href="/products">Cancel</a>
+
+        </form>
+        <div class="col-6">
+            <div class="product-image" style="background-image: url({{product.image}})"></div>
+        </div>
+    </div>
+</div>
 {{/block}}
 
 {{#block "js"}}

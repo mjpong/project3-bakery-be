@@ -1,13 +1,16 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
-<h1>Create New Flavor</h1>
+<div class="row">
+    <h1 class="col-9">Create New Flavor</h1>
+</div>
 <form method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
-    {{{form}}}
-
-    <input type="submit" value="Add Flavor" class="btn btn-primary"/>
-    <a href="/products">Cancel</a>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+    <div class="col-8">
+        {{{form}}}
+    </div>
+    <input type="submit" value="Add Flavor" class="btn allbtn" />
+    <a href="/products" class="btn allbtn">Cancel</a>
 </form>
 {{/block}}
 

@@ -1,18 +1,21 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
-<h1>{{user.name}} - Profile Page</h1>
-<div>
-    <a href="/users/profile/update">Update Profile</a>
-</div>
-<ul>
-    <li>Name: {{user.name}}</li>
-    <li>Email: {{user.email}}</li> 
-    <li>Phone: {{user.phone}}</li>
-    <li>Date of Birth: {{user.dob}}</li>
-    <li>Address: {{user.address}}</li>
+<div class="container">
+    <h1>{{user.name}}'s Profile Page</h1>
 
-</ul>
+    <ul>
+        <li>Name: {{user.name}}</li>
+        <li>Email: {{user.email}}</li>
+        <li>Phone: {{user.phone}}</li>
+        <li>Date of Birth: {{user.dob}}</li>
+        <li>Address: {{user.address}}</li>
+
+    </ul>
+    <div>
+        <a href="/users/profile/update"><button class="btn btn-primary">Update Profile</button></a>
+    </div>
+</div>
 {{/block}}
 
 {{/extends}}

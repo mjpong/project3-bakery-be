@@ -4,12 +4,13 @@
 <h1>Deleting {{name}}</h1>
 
 <form method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
     <div class="alert alert-danger">
-        <p>Are you sure you want to delete {{name}}?</p>
-        <input type="submit" class="btn btn-danger" value="Yes" />
-        <a href="/products" class="btn btn-success">No</a>
+        <p>Are you sure you want to delete <strong>{{name}}</strong> ?</p>
     </div>
+    <input type="submit" value="Delete" class="btn allbtn" />
+    <a href="/products" class="btn allbtn">Cancel</a>
+
 </form>
 {{/block}}
 {{/extends}}

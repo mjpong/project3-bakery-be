@@ -35,6 +35,10 @@ router.get('/', async (req, res) => {
                 let cost = order.total_cost;
                 order['orderDateShort'] = date.toLocaleDateString('en-GB')
                 order['orderCost'] = (cost / 100).toFixed(2)
+                if (order.completion_date) {
+                    let completion_date = order.completion_date;
+                    order['completionDateShort'] = completion_date.toLocaleDateString('en-GB')
+                }
             }
 
             res.render("orders/index", {
@@ -54,6 +58,10 @@ router.get('/', async (req, res) => {
                 let cost = order.total_cost;
                 order['orderDateShort'] = date.toLocaleDateString('en-GB')
                 order['orderCost'] = (cost / 100).toFixed(2)
+                if (order.completion_date) {
+                    let completion_date = order.completion_date;
+                    order['completionDateShort'] = completion_date.toLocaleDateString('en-GB')
+                }
             }
 
             res.render("orders/index", {
@@ -98,6 +106,10 @@ router.get('/', async (req, res) => {
                 let cost = order.total_cost;
                 order['orderDateShort'] = date.toLocaleDateString('en-GB')
                 order['orderCost'] = (cost / 100).toFixed(2)
+                if (order.completion_date) {
+                    let completion_date = order.completion_date;
+                    order['completionDateShort'] = completion_date.toLocaleDateString('en-GB')
+                }
             }
 
             res.render("orders/index", {
@@ -121,16 +133,18 @@ router.get("/:order_id", async (req, res) => {
     orderJSON['orderDateShort'] = date.toLocaleDateString('en-GB')
     orderJSON['orderCost'] = (totalCost / 100).toFixed(2)
 
-    const form = createOrderUpdateForm(allOrderStatus)
-    form.fields.status_id.value = order.get("status_id")
-
+    if (orderJSON.completion_date) {
+        let completion_date = orderJSON.completion_date;
+        orderJSON['completionDateShort'] = completion_date.toLocaleDateString('en-GB')
+    }
 
     for (let i = 0; i < orderJSON.orders_products.length; i++) {
         let cost = orderJSON.orders_products[i]['product']['cost']
         orderJSON.orders_products[i]['product']['cost'] = (cost / 100).toFixed(2)
     }
 
-    // console.log(orderJSON.orders_products)
+    const form = createOrderUpdateForm(allOrderStatus)
+    form.fields.status_id.value = order.get("order_status_id")
 
     res.render("orders/details", {
         "form": form.toHTML(bootstrapField),

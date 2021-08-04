@@ -1,58 +1,76 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
+<div class="container-fluid mb-5">
+    <div class="row">
+        <h1 class="col-9">Order Details of Order {{order.id}}</h1>
+        <div class="col-3">
+            <a href="/orders/{{order.id}}/delete" class=" btn allbtn">Delete Order</a>
+        </div>
+    </div>
+    <hr>
+    </hr>
+    <h4 class="mt-4">User Details</h4>
+    <div class="row">
+        <div class="col-6">
+            <p>User ID: {{order.user_id}}</p>
+            <p>Receiver Name: {{order.reciever_name}}</p>
+            <p>Receiver Address: {{order.receiver_address}}</p>
+            <p>Total Cost: {{order.orderCost}}</p>
+            <p>Order Date: {{order.orderDateShort}}</p>
+            <p>Completion Date: {{order.completionDateShort}}</p>
+        </div>
 
-<h1>Displaying Order {{order.id}}</h1>
-<p>User ID: {{order.user_id}}</p>
-<p>Receiver Name: {{order.reciever_name}}</p>
-<p>Receiver Address: {{order.receiver_address}}</p>
-<p>Date: {{order.orderDateShort}}</p>
-<p>Total Cost: {{order.orderCost}}</p>
-<div class="update-form col-4">
-    <form method="POST">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}" />
-        {{{form}}}
-        <input type="submit" class="btn btn-primary" value="Update" id="update">
-    </form>
+        <div class="update-form col-4">
+            <form method="POST">
+                <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+                {{{form}}}
+                <input type="submit" class=" btn allbtn" value="Update" id="update">
+            </form>
+        </div>
+    </div>
+    <hr>
+    </hr>
+    <h4 class="mt-4">Item Details</h4>
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th>Product Id</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            {{#each order.orders_products}}
+            <tr>
+                <td>
+                    {{this.product_id}}
+                </td>
+                <td>
+                    {{this.product.name}}
+                </td>
+
+                <td>
+                    {{this.quantity}}
+                </td>
+                <td>
+                    {{this.product.cost}}
+                </td>
+
+            </tr>
+
+            {{/each}}
+
+        </tbody>
+    </table>
+    <a class="btn allbtn" href="/orders">Back</a>
+
+
 </div>
-
-<table class="table">
-    <h4>Item Details</h4>
-    <thead>
-        <tr>
-            <th>Product Id</th>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Unit Price</th>
-
-        </tr>
-    </thead>
-
-    <tbody>
-        {{#each order.orders_products}}
-        <tr>
-            <td>
-                {{this.product_id}}
-            </td>
-            <td>
-                {{this.product.name}}
-            </td>
-
-            <td>
-                {{this.quantity}}
-            </td>
-            <td>
-                {{this.product.cost}}
-            </td>
-
-        </tr>
-
-        {{/each}}
-
-    </tbody>
-</table>
-<a href="/orders/{{order.id}}/delete" class="btn btn-warning">Delete Order</a>
-
 {{/block}}
 
 {{/extends}}

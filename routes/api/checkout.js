@@ -25,7 +25,6 @@ router.get('/:user_id', async (req, res) => {
     newOrder.set("receiver_address", req.query.address)
     newOrder.set("order_date", new Date())
     await newOrder.save()
-    console.log(newOrder)
     let newOrderId = newOrder.toJSON().id
 
     // get all items from cart
@@ -33,7 +32,7 @@ router.get('/:user_id', async (req, res) => {
     let lineItems = [];
     let meta = [];
 
-    const cartServices = new CartServices( user_info.id)
+    const cartServices = new CartServices(user_info.id)
 
     for (let item of allItems) {
         const lineItem = {
@@ -57,14 +56,14 @@ router.get('/:user_id', async (req, res) => {
         newOrderProduct.set("product_id", item.get('product_id'))
         newOrderProduct.set("order_id", newOrder.get("id"))
         newOrderProduct.set("quantity", item.get('quantity'))
-        newOrderProduct.set("cost",item.related("product").get("cost"),)
+        newOrderProduct.set("cost", item.related("product").get("cost"),)
         await newOrderProduct.save();
         console.log("Successfully created OrderProduct")
         // update and delete cart items
         await cartServices.removeItem(item.get('id'))
     }
 
-    
+
 
     // create stripe payment
     let metaData = JSON.stringify(meta)

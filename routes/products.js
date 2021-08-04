@@ -35,21 +35,16 @@ router.get('/', async (req, res) => {
     const allFlavors = await dataLayer.getAllFlavors()
     const allDoughTypes = await dataLayer.getAllDoughTypes()
     const allToppings = await dataLayer.getAllToppings()
-
     // browse
     let flavors = await dataLayer.getFlavors()
     let doughtypes = await dataLayer.getDoughTypes()
     let toppings = await dataLayer.getToppings()
     let ingredients = await dataLayer.getIngredients()
 
-    console.log(flavors.toJSON())
-
-
     allFlavors.unshift([0, "-"])
     allDoughTypes.unshift([0, "-"])
     allToppings.unshift([0, "-"])
     const searchForm = createSearchForm(allFlavors, allToppings, allDoughTypes)
-
 
     //query connector
     let q = Product.collection()
@@ -59,34 +54,43 @@ router.get('/', async (req, res) => {
             let products = await q.fetch({
                 withRelated: ['toppings', "dough_type", "flavor", "dough_type.ingredients"]
             })
+            let productsJSON = products.toJSON()
+            for (let product of productsJSON) {
+                let cost = product.cost;
+                product['productCost'] = (cost / 100).toFixed(2)
+            }
 
             res.render("products/index", {
-                'products': products.toJSON(),
+                'products': productsJSON,
                 'flavors': flavors.toJSON(),
-                'ingredients': ingredients,
-                'doughtypes': doughtypes,
-                'toppings': toppings,
+                'ingredients': ingredients.toJSON(),
+                'doughtypes': doughtypes.toJSON(),
+                'toppings': toppings.toJSON(),
                 'form': form.toHTML(bootstrapField)
             })
-
-
         },
         "error": async (form) => {
             let products = await q.fetch({
                 withRelated: ['toppings', "dough_type", "flavor", "dough_type.ingredients"]
             })
+
+            let productsJSON = products.toJSON()
+            for (let product of productsJSON) {
+                let cost = product.cost;
+                product['productCost'] = (cost / 100).toFixed(2)
+            }
+
             res.render("products/index", {
-                'products': products.toJSON(),
+                'products': productsJSON,
                 'flavors': flavors.toJSON(),
-                'ingredients': ingredients,
-                'doughtypes': doughtypes,
-                'toppings': toppings,
+                'ingredients': ingredients.toJSON(),
+                'doughtypes': doughtypes.toJSON(),
+                'toppings': toppings.toJSON(),
                 'form': form.toHTML(bootstrapField)
             })
 
         },
         'success': async (form) => {
-            console.log(form.data);
             if (form.data.name) {
                 q = q.where("name", "like", "%" + form.data.name + "%")
             }
@@ -110,25 +114,24 @@ router.get('/', async (req, res) => {
                 withRelated: ['flavor', "dough_type", "toppings"]
             })
 
+            let productsJSON = products.toJSON()
+            for (let product of productsJSON) {
+                let cost = product.cost;
+                product['productCost'] = (cost / 100).toFixed(2)
+            }
+
             res.render("products/index", {
-                'products': products.toJSON(),
+                'products': productsJSON,
                 'flavors': flavors.toJSON(),
-                'ingredients': ingredients,
-                'doughtypes': doughtypes,
-                'toppings': toppings,
+                'ingredients': ingredients.toJSON(),
+                'doughtypes': doughtypes.toJSON(),
+                'toppings': toppings.toJSON(),
                 'form': form.toHTML(bootstrapField)
             })
 
         }
     })
 
-    // res.render("products/index", {
-    //     'products': allProducts.toJSON(),
-    //     'flavors': allFlavors,
-    //     'ingredients': allIngredients,
-    //     'doughtypes': allDoughTypes,
-    //     'toppings': allToppings
-    // })
 })
 
 // PRODUCT CREATE
@@ -150,23 +153,18 @@ router.post('/create', async (req, res) => {
     const allDoughTypes = await dataLayer.getAllDoughTypes()
     const allToppings = await dataLayer.getAllToppings()
 
-    console.log(req.body)
-
     const productForm = createProductForm(allFlavors, allDoughTypes, allToppings);
     productForm.handle(req, {
         'success': async (form) => {
-            console.log(form.data);
-
             let { toppings, ...productData } = form.data;
             productData.image = req.body.image;
-            console.log("productData=", productData)
             const product = new Product(productData);
             await product.save();
             if (toppings) {
                 await product.toppings().attach(toppings.split(","))
             }
             req.flash("success_message", `${product.get('name')} has been created`)
-            res.redirect('/products?tab=cinnamonrolls');
+            res.redirect('/products');
         },
         'error': async (form) => {
             res.render("products/create_product", {
@@ -216,11 +214,9 @@ router.post('/:product_id/update', async (req, res) => {
     const productForm = createProductForm();
     productForm.handle(req, {
         'success': async (form) => {
-            console.log(form.data);
             let { toppings, ...productData } = form.data;
             productData.image = req.body.image;
-            console.log("productData=", productData)
-            const product = new Product(productData);
+            product.set(productData)
             await product.save();
 
             let toppingIds = toppings.split(',');
@@ -230,7 +226,7 @@ router.post('/:product_id/update', async (req, res) => {
             await product.toppings().attach(toppingIds);
             req.flash("success_message", `${product.get('name')} has been updated`)
 
-            res.redirect('/products?tab=cinnamonrolls');
+            res.redirect('/products');
         },
         'error': async (form) => {
             res.render('products/update_product', {
@@ -280,7 +276,7 @@ router.post('/flavors/create', async (req, res) => {
             flavor.set('name', form.data.name);
             await flavor.save();
             req.flash("success_message", `${flavor.get('name')} has been created`)
-            res.redirect('/products?tab=flavors');
+            res.redirect('/products');
         },
         'error': async (form) => {
             res.render("products/create_flavor", {
@@ -323,7 +319,7 @@ router.post('/flavors/:flavor_id/update', async (req, res) => {
             flavor.set(form.data);
             flavor.save();
             req.flash("success_message", `${flavor.get('name')} has been created`)
-            res.redirect('/products?tab=flavors');
+            res.redirect('/products');
         },
         'error': async (form) => {
             res.render('products/update_item', {
@@ -351,7 +347,7 @@ router.post('/flavors/:flavor_id/delete', async (req, res) => {
     const flavor = await dataLayer.getFlavorById(flavorId)
     await flavor.destroy();
     req.flash("success_message", `Flavor has been deleted`)
-    res.redirect('/products?tab=flavors')
+    res.redirect('/products')
 })
 
 // TOPPING CREATE
@@ -370,7 +366,7 @@ router.post('/toppings/create', async (req, res) => {
             topping.set('name', form.data.name);
             await topping.save();
             req.flash("success_message", `${topping.get('name')} has been created`)
-            res.redirect('/products?tab=toppings');
+            res.redirect('/products');
         },
         'error': async (form) => {
             res.render("products/create_topping", {
@@ -412,7 +408,7 @@ router.post('/toppings/:topping_id/update', async (req, res) => {
             topping.set(form.data)
             topping.save();
             req.flash("success_message", `${topping.get('name')} has been updated`)
-            res.redirect('/products?tab=toppings');
+            res.redirect('/products');
         },
         'error': async (form) => {
             res.render('products/update_item', {
@@ -442,7 +438,7 @@ router.post('/toppings/:topping_id/delete', async (req, res) => {
     const topping = await dataLayer.getToppingById(toppingId)
     await topping.destroy();
     req.flash("success_message", `Topping has been deleted`)
-    res.redirect('/products?tab=toppings')
+    res.redirect('/products')
 })
 
 // DOUGHTYPE CREATE 
@@ -468,7 +464,7 @@ router.post('/doughtypes/create', async (req, res) => {
                 await doughtype.ingredients().attach(ingredients.split(','))
             }
             req.flash("success_message", `${doughtype.get('name')} has been created`)
-            res.redirect('/products?tab=doughtypes');
+            res.redirect('/products');
         },
         'error': async (form) => {
             res.render("products/create_doughtype", {
@@ -486,7 +482,7 @@ router.get('/doughtypes/:dough_type_id/update', async (req, res) => {
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
 
     // fetch all the ingredients
-    const allIngredients = await dataLayer.getAllIngredients
+    const allIngredients = await dataLayer.getAllIngredients();
     const doughTypeForm = createDoughTypeForm(allIngredients);
 
     // fill in the existing values
@@ -521,7 +517,7 @@ router.post('/doughtypes/:dough_type_id/update', async (req, res) => {
             await doughtype.ingredients().detach(toRemove);
             await doughtype.ingredients().attach(ingredientIds)
             req.flash("success_message", `${doughtype.get('name')} has been updated`)
-            res.redirect('/products?tab=doughtypes');
+            res.redirect('/products');
         },
         'error': async (form) => {
             res.render('products/update_doughtype', {
@@ -549,7 +545,7 @@ router.post("/doughtypes/:dough_type_id/delete", async (req, res) => {
     const doughtype = await dataLayer.getDoughTypeById(doughtypeId)
     await doughtype.destroy();
     req.flash("success_message", `Dough Type has been deleted`)
-    res.redirect('/products?tab=doughtypes')
+    res.redirect('/products')
 })
 
 //INGREDIENTS CREATE 
@@ -568,7 +564,7 @@ router.post('/ingredients/create', async (req, res) => {
             ingredient.set('name', form.data.name);
             await ingredient.save();
             req.flash("success_message", `${ingredient.get('name')} has been created`)
-            res.redirect('/products?tab=ingredients');
+            res.redirect('/products');
         },
         'error': async (form) => {
             res.render("products/create_ingredient", {
@@ -610,7 +606,7 @@ router.post('/ingredients/:ingredient_id/update', async (req, res) => {
             ingredient.set(form.data)
             ingredient.save();
             req.flash("success_message", `${ingredient.get('name')} has been updated`)
-            res.redirect('/products?tab=ingredients');
+            res.redirect('/products');
         },
         'error': async (form) => {
             res.render('products/update_item', {
@@ -639,7 +635,7 @@ router.post('/ingredients/:ingredient_id/delete', async (req, res) => {
     const ingredient = await dataLayer.getIngredientById(ingredientId)
     await ingredient.destroy();
     req.flash("success_message", `Ingredient has been deleted`)
-    res.redirect('/products?tab=ingredients')
+    res.redirect('/products')
 })
 
 // #3 export out the router

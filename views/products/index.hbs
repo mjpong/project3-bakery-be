@@ -3,28 +3,22 @@
 {{#block 'content'}}
 
 <div class="container-fluid">
-    <div class="row">
-        <h1>Products</h1>
-    </div>
+
     <div class="row">
         <div class="col-3">
             <div class="results">
                 <p>Total of {{products.length}} products</p>
+                <p>Search and Filter</p>
             </div>
-            <i class="fas fa-search" data-toggle="collapse" href="#collapseForm" role="button" aria-expanded="false"
-                aria-controls="collapseForm">
-                Search and Filter
-            </i>
-            <div id="collapseForm" class="collapse">
+            <div id="search-form">
                 <form method="GET">
                     {{{form}}}
-                    <input type="submit" class="btn btn-primary" value="Search" />
-
+                    <input type="submit" class="btn allbtn" value="Search" />
                 </form>
-                <button id="clear-filter" class="btn btn-warning">Reset </button>
+                <a href="/products" id="clear-filter" class="btn allbtn">Reset </a>
             </div>
-
         </div>
+
         <div class="col-9">
             <ul class="nav nav-tabs" id="myTab">
                 <li class="nav-item">
@@ -42,23 +36,22 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#ingredients" data-toggle="tab">Ingredients</a>
                 </li>
-
             </ul>
+
             <div class="tab-content my-tab">
                 <div class="tab-pane active" id="cinnamonrolls">
-                    <div class="row">
-                        <div class="col-md-9">
+                    <div class="row my-3">
+                        <div class="col-md-8">
                             <h3>Cinnamon Rolls</h3>
                         </div>
-                        <div class="col-md-3">
-                            <a class="nav-link" href="/products/create">Create New Roll</a>
+                        <div class="col-md-4">
+                            <a class="nav-link btn allbtn" href="/products/create">New Roll</a>
                         </div>
                     </div>
                     <div class="row">
                         <table class="table table-responsive">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Cost</th>
                                     <th>Description</th>
@@ -66,7 +59,6 @@
                                     <th>Flavor</th>
                                     <th>Toppings</th>
                                     <th>Stock</th>
-                                    <th>Image</th>
                                     <th>Update</th>
                                 </tr>
                             </thead>
@@ -74,13 +66,10 @@
                                 {{#each products}}
                                 <tr>
                                     <td>
-                                        {{this.id}}
-                                    </td>
-                                    <td>
                                         {{this.name}}
                                     </td>
                                     <td>
-                                        {{this.cost}}
+                                        $ {{this.productCost}}
                                     </td>
                                     <td>
                                         {{this.description}}
@@ -93,18 +82,15 @@
                                     </td>
                                     <td>
                                         {{#each this.toppings}}
-                                        <span>{{this.name}}</span>
+                                        <span class="badge badge-secondary p-2">{{this.name}}</span>
                                         {{/each}}
                                     </td>
                                     <td>
                                         {{this.stock}}
                                     </td>
+
                                     <td>
-                                        <img id="imageUrl" height="200px" src={{this.image}} />
-                                    </td>
-                                    <td>
-                                        <a href='/products/{{this.id}}/update' class="btn btn-primary btn-sm">Edit</a>
-                                        <a href='/products/{{this.id}}/delete' class="btn btn-danger btn-sm">Delete</a>
+                                        <a href='/products/{{this.id}}/update' class="btn allbtn">More Details</a>
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -113,16 +99,16 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="flavors">
-                    <div class="row">
-                        <div class="col-md-9">
+                    <div class="row my-3">
+                        <div class="col-md-8">
                             <h3>Flavors</h3>
                         </div>
-                        <div class="col-md-3">
-                            <a class="nav-link" href="/products/flavors/create">Create New Flavor</a>
+                        <div class="col-md-4">
+                            <a class="nav-link btn allbtn" href="/products/flavors/create">New Flavor</a>
                         </div>
                     </div>
                     <div class="row">
-                        <table class="table table-responsive">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -140,10 +126,8 @@
                                         {{this.name}}
                                     </td>
                                     <td>
-                                        <a href='/products/flavors/{{this.id}}/update'
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <a href='/products/flavors/{{this.id}}/delete'
-                                            class="btn btn-danger btn-sm">Delete</a>
+                                        <a href='/products/flavors/{{this.id}}/update' class="allbtn btn">Edit</a>
+                                        <a href='/products/flavors/{{this.id}}/delete' class="btn allbtn">Delete</a>
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -152,16 +136,16 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="toppings">
-                    <div class="row">
-                        <div class="col-md-9">
+                    <div class="row my-3">
+                        <div class="col-md-8">
                             <h3>Toppings</h3>
                         </div>
-                        <div class="col-md-3">
-                            <a class="nav-link" href="/products/toppings/create">Create New Topping</a>
+                        <div class="col-md-4">
+                            <a class="nav-link btn allbtn" href="/products/toppings/create">New Topping</a>
                         </div>
                     </div>
                     <div class="row">
-                        <table class="table table-responsive">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -179,10 +163,8 @@
                                         {{this.name}}
                                     </td>
                                     <td>
-                                        <a href='/products/toppings/{{this.id}}/update'
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <a href='/products/toppings/{{this.id}}/delete'
-                                            class="btn btn-danger btn-sm">Delete</a>
+                                        <a href='/products/toppings/{{this.id}}/update' class="btn allbtn">Edit</a>
+                                        <a href='/products/toppings/{{this.id}}/delete' class="btn allbtn">Delete</a>
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -191,16 +173,16 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="doughtypes">
-                    <div class="row">
-                        <div class="col-md-9">
+                    <div class="row my-3">
+                        <div class="col-md-8">
                             <h3>Dough Types</h3>
                         </div>
-                        <div class="col-md-3">
-                            <a class="nav-link" href="/products/doughtypes/create">Create New Dough Type</a>
+                        <div class="col-md-4">
+                            <a class="nav-link btn allbtn" href="/products/doughtypes/create">New Dough Type</a>
                         </div>
                     </div>
                     <div class="row">
-                        <table class="table table-responsive">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -220,14 +202,12 @@
                                     </td>
                                     <td>
                                         {{#each this.ingredients}}
-                                        <span>{{this.name}}</span>
+                                        <span class="badge badge-secondary p-2">{{this.name}}</span>
                                         {{/each}}
                                     </td>
                                     <td>
-                                        <a href='/products/doughtypes/{{this.id}}/update'
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <a href='/products/doughtypes/{{this.id}}/delete'
-                                            class="btn btn-danger btn-sm">Delete</a>
+                                        <a href='/products/doughtypes/{{this.id}}/update' class="btn allbtn">Edit</a>
+                                        <a href='/products/doughtypes/{{this.id}}/delete' class="btn allbtn">Delete</a>
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -236,16 +216,16 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="ingredients">
-                    <div class="row">
-                        <div class="col-md-9">
+                    <div class="row my-3">
+                        <div class="col-md-8">
                             <h3>Ingredients</h3>
                         </div>
-                        <div class="col-md-3">
-                            <a class="nav-link" href="/products/ingredients/create">Create New Ingredient</a>
+                        <div class="col-md-4">
+                            <a class="nav-link btn allbtn" href="/products/ingredients/create">New Ingredient</a>
                         </div>
                     </div>
                     <div class="row">
-                        <table class="table table-responsive">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -263,10 +243,8 @@
                                         {{this.name}}
                                     </td>
                                     <td>
-                                        <a href='/products/ingredients/{{this.id}}/update'
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <a href='/products/ingredients/{{this.id}}/delete'
-                                            class="btn btn-danger btn-sm">Delete</a>
+                                        <a href='/products/ingredients/{{this.id}}/update' class="btn allbtn">Edit</a>
+                                        <a href='/products/ingredients/{{this.id}}/delete' class="btn allbtn">Delete</a>
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -283,6 +261,7 @@
 {{/block}}
 
 {{#block "js"}}
+{{!--
 <script>
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
@@ -290,20 +269,6 @@
 
     var triggerEl = document.querySelector(`a[href="#${tab}"]`)
     $(triggerEl).tab('show');
-
-    document.querySelector("#clear-filter").addEventListener("click", function () {
-        console.log(1);
-        let inputs = document.querySelectorAll("input[type=text]");
-        for (let i = 0; i < inputs.length; i++) {
-            inputs[i].value = "";
-        }
-
-        let selects = document.querySelectorAll("select");
-        for (let i = 0; i < selects.length; i++) {
-            selects[i].value = 0;
-        }
-    })
-
-</script>
+</script> --}}
 {{/block}}
 {{/extends}}

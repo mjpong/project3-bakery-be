@@ -14,7 +14,8 @@
     crossorigin="anonymous" />
   <link rel="icon" href="/RollWithMeSmall.png">
   <link rel="stylesheet" href="/styles.css">
-  <title>Bakery Backend</title>
+  {{#block "css"}}{{/block}}
+  <title>Roll With Me</title>
 </head>
 
 <body>
@@ -35,45 +36,47 @@
   {{/if}}
 
   {{!-- nav --}}
-  <div class="container-fluid">
-    <nav class="navbar navbar-expand-md" id="header">
-      <a class="navbar-brand" href="/"><img src="/RollWithMe.png" alt="logo" height="150px" width="150px" /></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/products">Products</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/orders">Orders</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              Admin
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/users/profile">My Profile</a>
-              <a class="dropdown-item" href="/users/register">Create New Account</a>
-              <a class="dropdown-item" href="/users/login">Login</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/users/logout">Logout</a>
-            </div>
-          </li>
-        </ul>
+  <nav class="navbar navbar-expand-md" id="header">
+    <a class="navbar-brand" href="/"><img src="/RollWithMe.png" alt="logo" height="150px" width="150px" /></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      </div>
-    </nav>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/products">Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/orders">Orders</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Admin
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/users/profile">My Profile</a>
+            <a class="dropdown-item" href="/users/register">Create New Account</a>
+            <a class="dropdown-item" href="/users/login">Login</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/users/logout">Logout</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <section style="padding: 0px 20px">
+    {{#block 'content'}}
+    {{/block}}
+  </section>
 
-    {{#block 'content'}}{{/block}}
-  </div>
+
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

@@ -2,10 +2,10 @@
 
 {{#block "content"}}
 
-<div class="register-form">
+<div class="register-form container">
     <h3 style="text-align: center;">Login to Your Account</h3>
     <form method="POST" style="width:100%">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}" />
         {{{form}}}
         <div style="display:flex">
             <input type="submit" value="Login" class="btn btn-primary">

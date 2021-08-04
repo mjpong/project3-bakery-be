@@ -1,14 +1,15 @@
 {{#extends "base"}}
 
 {{#block "content"}}
-
-<form method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
-    <div class="alert alert-danger">
-        Are you sure you want to delete <strong>Order ID: {{order.id}}</strong>?
-    </div> 
-    <input type="submit" value="Delete" class="btn btn-primary">
-    <a href="/orders" class="btn-primary btn">Cancel</a>
-</form>
+<div class="container-fluid">
+    <form method="POST">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+        <div class="alert alert-danger">
+            Are you sure you want to delete <strong>Order ID: {{order.id}}</strong>?
+        </div>
+        <input type="submit" value="Delete" class="btn allbtn">
+        <a href="/orders" class="btn allbtn">Cancel</a>
+    </form>
+</div>
 {{/block}}
 {{/extends}}

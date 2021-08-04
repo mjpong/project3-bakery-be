@@ -323,7 +323,6 @@ const createLoginForm = () => {
 
 //search forms 
 const createSearchForm = (flavors, toppings, dough_types) => {
-    console.log(flavors, toppings, dough_types)
     return forms.create({
         "name": fields.string({
             errorAfterField: true,

@@ -1,7 +1,9 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
-<h1>Create New Product</h1>
+<div class="row">
+    <h1 class="col-9">Create New Cinnamon Roll</h1>
+</div>
 <form method="POST">
     <input type="hidden" name="_csrf" value="{{csrfToken}}" />
     {{{form}}}
@@ -10,8 +12,8 @@
         <input type="hidden" role="uploadcare-uploader" id="uploadcare" name="image" />
     </div>
 
-    <input type="submit" id="create" value="Add Product" class="btn btn-primary" />
-    <a href="/products" class="btn btn-primary">Cancel</a>
+    <input type="submit" id="create" value="Add Product" class="btn allbtn" />
+    <a href="/products" class="btn allbtn">Cancel</a>
 
 </form>
 {{/block}}

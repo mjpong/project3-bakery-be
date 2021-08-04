@@ -1,11 +1,16 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
-<h1>Updating: {{name}}</h1>
+<div class="row">
+    <h1 class="col-9">Updating {{name}}</h1>
+</div>
 <form method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
-    {{{form}}}
-    <input type="submit" value="Update" class="btn btn-primary"/>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+    <div class="col-8">
+        {{{form}}}
+    </div>
+    <input type="submit" value="Update" class="btn allbtn" />
+    <a href="/products" class="btn allbtn">Cancel</a>
 </form>
 {{/block}}
 
