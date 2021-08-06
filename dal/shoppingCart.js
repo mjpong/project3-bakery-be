@@ -1,4 +1,5 @@
 const { ShoppingCartItem, Product } = require("../models")
+const productDataLayer = require('../dal/products')
 
 const getAllItems = async (userId) => {
 
@@ -39,7 +40,7 @@ const removeItem = async (id) => {
 const updateQuantity = async (userId, productId, updatedQuantity) => {
     const item = await getItemByUserAndProduct(userId, productId)
     if (item) {
-        item.set("quantity", updateQuantity)
+        item.set("quantity", updatedQuantity)
         item.save()
         return item
     } else {
@@ -47,4 +48,28 @@ const updateQuantity = async (userId, productId, updatedQuantity) => {
     }
 }
 
-module.exports = { getAllItems, getItemById, getItemByUserAndProduct, removeItem, updateQuantity }
+const emptyCart = async (userId) => {
+    let cartItem = await getAllItems(userId)
+    if (cartItem.length > 0) {
+        cartItem = await ShoppingCartItem.where({
+            "id": id
+        }).destroy();
+    }
+    return cartItem
+}
+
+const updateStock = async (userId, productId) => {
+    const cartItem = await getItemByUserAndProduct(userId, productId)
+    const product = await productDataLayer.getProductById(cartItem.get("product_id"));
+    if (product) {
+        product.set('stock', product.get("stock") - cartItem.get("quantity"));
+        await product.save()
+        console.log("stock quantity updated")
+        return true;
+    } else {
+        console.log("stock cannot be updated")
+        return false;
+    }
+}
+
+module.exports = { getAllItems, getItemById, getItemByUserAndProduct, removeItem, updateQuantity, updateStock, emptyCart }

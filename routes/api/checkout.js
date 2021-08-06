@@ -3,7 +3,7 @@ const router = express.Router();
 const CartServices = require('../../services/CartServices')
 const Stripe = require('stripe')(process.env.STRIPE_KEY_SECRET)
 const bodyParser = require("body-parser")
-const { Order, OrderProduct } = require("../../models")
+const { Order, OrderProduct, Product } = require("../../models")
 const jwt = require("jsonwebtoken")
 
 router.get('/:user_id', async (req, res) => {
@@ -15,7 +15,19 @@ router.get('/:user_id', async (req, res) => {
         }
         user_info = user;
     })
-    const cart = new CartServices(user_info.id)
+    const cartServices = new CartServices(user_info.id)
+
+    // Validation of stock
+    // Check if all products have enough stock
+    let allItems = await cartServices.getAll();
+
+    for (let item of allItems) {
+        let product = await cartServices.getProductById(item.get("product_id"))
+        if (product.get("stock") < item.get("quantity")) {
+            res.send("Not enough stock");
+            return;
+        }
+    }
 
     //create a new order with status pending
     const newOrder = new Order()
@@ -27,12 +39,10 @@ router.get('/:user_id', async (req, res) => {
     await newOrder.save()
     let newOrderId = newOrder.toJSON().id
 
-    // get all items from cart
-    let allItems = await cart.getAll();
+    // Create order items and update stock
+
     let lineItems = [];
     let meta = [];
-
-    const cartServices = new CartServices(user_info.id)
 
     for (let item of allItems) {
         const lineItem = {
@@ -59,6 +69,10 @@ router.get('/:user_id', async (req, res) => {
         newOrderProduct.set("cost", item.related("product").get("cost"),)
         await newOrderProduct.save();
         console.log("Successfully created OrderProduct")
+
+        // update stock in product - quantity
+        await cartServices.updateStock(user_info.id, item.get('product_id'))
+        // 
         // update and delete cart items
         await cartServices.removeItem(item.get('id'))
     }
@@ -71,7 +85,7 @@ router.get('/:user_id', async (req, res) => {
         payment_method_types: ['card'],
         line_items: lineItems,
         success_url: process.env.STRIPE_SUCCESS_URL + '/' + newOrderId + "?payment=success",
-        cancel_url: process.env.STRIPE_ERROR_URL + '/' + newOrderId + "?payment=fail",
+        cancel_url: process.env.STRIPE_ERROR_URL + '/' + newOrderId + "?payment=failed",
         metadata: {
             'orders': metaData,
             'order_id': newOrder.get("id")

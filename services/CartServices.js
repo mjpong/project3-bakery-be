@@ -1,8 +1,8 @@
-const {ShoppingCartItem, Product} = require('../models');
+const { ShoppingCartItem, Product } = require('../models');
 const dataLayer = require('../dal/shoppingCart');
 
 class CartServices {
-    constructor(user_id){
+    constructor(user_id) {
         this.user_id = user_id;
     }
 
@@ -37,9 +37,27 @@ class CartServices {
     async updateQuantity(productId, updatedQuantity) {
         return await dataLayer.updateQuantity(this.user_id, productId, updatedQuantity)
     }
-    
+
     async getItemById(id) {
         return await dataLayer.getItemById(id)
     }
+
+    async emptyCart(id) {
+        return await dataLayer.emptyCart(id)
+    }
+
+    async updateStock(user_id, productId) {
+        return await dataLayer.updateStock(user_id, productId)
+    }
+
+    async getProductById(productId) {
+        return await Product.where({
+            'id': parseInt(productId)
+        }).fetch({
+            require: true
+        });
+    }
+
+
 }
 module.exports = CartServices;

@@ -31,8 +31,6 @@ const getUserByEmail = async (email) => {
     return user;
 }
 
-
-
 router.post('/login', async (req, res) => {
     let user = await User.where({
         'email': req.body.email,
@@ -88,7 +86,7 @@ router.post("/refresh", async (req, res) => {
         if (err) {
             return res.sendStatus(403);
         }
-        
+
         let userModel = await User.where({
             'email': req.body.email,
             "role": 1
