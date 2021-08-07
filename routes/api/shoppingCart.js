@@ -60,7 +60,6 @@ router.post('/increase/:product_id', checkIfAuthJWT, async (req, res) => {
         }
     }
     catch (e) {
-        console.log(e);
         res.status(204)
         res.send({
             "message": "Cannot increase item"
