@@ -97,8 +97,6 @@ router.post("/refresh", async (req, res) => {
         res.send({
             accessToken
         })
-
-
     })
 })
 
@@ -136,7 +134,7 @@ router.post("/logout", async (req, res) => {
 
 router.post("/register", async (req, res) => {
     if (req.body.password !== req.body.confirmPassword) {
-        res.send("Unable to create user");
+        res.send("Passwords do not match");
     }
 
     let checkEmail = await User.where({
@@ -164,51 +162,35 @@ router.post("/register", async (req, res) => {
     }
 })
 
-// get user details
-router.get("/edit/:user_id", async (req, res) => {
-    let id = req.params.user_id
+// POST Profile change
+router.post("/update", checkIfAuthJWT, async (req, res) => {
+    // if (req.body.password !== req.body.confirmPassword) {
+    //     res.send("Passwords do not match");
+    // }
+
     try {
+
         let user = await User.where({
-            "id": id
+            "id": req.user.id
         }).fetch({
             require: true
         })
-        res.send(user)
+        user.set("name", req.body.name)
+        user.set("email", req.body.email)
+        user.set('password', getHash(req.body.password))
+        user.set('address', req.body.address)
+        user.set('phone', req.body.phone)
+        user.set("dob", req.body.dob)
+        user.set("role", 1);
+        console.log(user)
+        await user.save()
+
+        res.status(200)
+        res.send(user.toJSON())
     } catch (e) {
         console.log(e)
-        res.send("Error")
+        res.send('Update profile error')
     }
 })
 
-// POST Profile change
-router.post("/edit/:user_id", async (req, res) => {
-    let id = req.params.user_id
-    let user = await User.where({
-        "id": id
-    }).fetch({
-        require: true
-    })
-
-    if (req.body.password) {
-        try {
-            user.set("password", getHash(req.body.password))
-            user.save()
-            res.send("Password Updated")
-        } catch (e) {
-            console.log(e)
-            res.send("Update error")
-        }
-    }
-
-    if (req.body.address) {
-        try {
-            user.set("address", req.body.address)
-            user.save()
-            res.send("Address has been updated")
-        } catch (e) {
-            console.log(e)
-            res.send("Update error")
-        }
-    }
-})
 module.exports = router

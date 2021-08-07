@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken")
 
 const checkIfAuth = (req, res, next) => {
-    console.log("CheckIfAuth")
     if (req.session.user) {
         next()
     } else {
