@@ -9,7 +9,7 @@ const OrderServices = require('../../services/OrderServices');
 router.get('/', checkIfAuthJWT, async (req, res) => {
     let order = new OrderServices(req.user.id)
     try {
-        const allOrders = await order.getAll()
+        const allOrders = await order.getAllOrdersByUser()
         res.send(allOrders.toJSON())
     } catch (e) {
         res.send("Unable to get orders")

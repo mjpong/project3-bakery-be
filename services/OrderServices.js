@@ -9,6 +9,10 @@ class OrderServices {
         return await dataLayer.getAllOrders(this.user_id)
     }
 
+    async getAllOrdersByUser() {
+        return await dataLayer.getAllOrdersByUser(this.user_id)
+    }
+
     async getOrderById(id) {
         return await dataLayer.getOrderById(id)
     }
@@ -16,7 +20,6 @@ class OrderServices {
     async getAllStatus() {
         return await dataLayer.getAllOrderStatus()
     }
-
 
 
 }

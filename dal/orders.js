@@ -1,6 +1,16 @@
 const { Order, OrderStatus, Product, OrderProduct } = require("../models")
 
-const getAllOrders = async (userId) => {
+const getAllOrders = async () => {
+
+    return await Order.collection().fetch({
+        require: true,
+        withRelated: ['order_status', 'orders_products']
+
+    })
+
+}
+
+const getAllOrdersByUser = async (userId) => {
 
     return await Order.collection().where({
         "user_id": userId,
@@ -38,4 +48,4 @@ getOrderProductById = async (id) => {
     })
 }
 
-module.exports = { getAllOrders, getAllOrderStatus, getOrderById, getOrderProductById }
+module.exports = { getAllOrders, getAllOrdersByUser, getAllOrderStatus, getOrderById, getOrderProductById }
