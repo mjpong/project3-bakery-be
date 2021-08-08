@@ -50,7 +50,7 @@ const getIngredientById = async (ingredientId) => {
 }
 
 const getAllProducts = async () => {
-    return await Product.fetchAll({
+    return await Product.query("orderBy", 'name', 'ASC').fetchAll({
         require: true,
         withRelated: ['flavor', "dough_type", "toppings"]
     })

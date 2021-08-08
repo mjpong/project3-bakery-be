@@ -4,14 +4,15 @@ const CartServices = require('../../services/CartServices')
 const Stripe = require('stripe')(process.env.STRIPE_KEY_SECRET)
 const bodyParser = require("body-parser")
 const { Order, OrderProduct, Product } = require("../../models")
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const { checkIfAuthJWT } = require('../../middleware');
 
 router.get('/:user_id', async (req, res) => {
     let user_info = "";
 
     jwt.verify(req.query.token, process.env.TOKEN_SECRET, (err, user) => {
         if (err) {
-            res.sendStatus(403)
+            res.redirect('localhost:3000/login' + "?" + "session=expire&" + )
         }
         user_info = user;
     })
