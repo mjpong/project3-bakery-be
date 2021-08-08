@@ -41,30 +41,30 @@ app.use(session({
 app.use(flash())
 
 // setup global middleware
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.locals.success_message = req.flash("success_message")
     res.locals.error_message = req.flash("error_message")
     next()
 })
 
 // global middleware for hbs sessions
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.locals.user = req.session.user;
     next()
 })
 
 // enable csrf
 const csrfInstance = csrf();
-app.use(function (req,res,next) {
+app.use(function (req, res, next) {
     // exclude api from csrf
-    if (req.url.slice(0,5)=="/api/") {
+    if (req.url.slice(0, 5) == "/api/") {
         return next()
     }
-    csrfInstance(req,res,next)
+    csrfInstance(req, res, next)
 })
 
 //share csrf with hbs files 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     if (req.csrfToken) {
         res.locals.csrfToken = req.csrfToken();
     }
@@ -98,6 +98,6 @@ async function main() {
 
 main();
 
-app.listen(8000, () => {
+app.listen(process.env.PORT, () => {
     console.log("Server has started");
 });
