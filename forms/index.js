@@ -417,7 +417,7 @@ const createOrderSearchForm = (status) => {
                 label: ["form-label"],
             },
         }),
-        "reciever_name": fields.string({
+        "receiver_name": fields.string({
             required: false,
             cssClasses: {
                 label: ["form-label"],

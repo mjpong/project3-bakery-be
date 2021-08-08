@@ -21,7 +21,7 @@ exports.up = function (db) {
       primaryKey: true,
       autoIncrement: true
     },
-    reciever_name: {
+    receiver_name: {
       type: "string",
       length: 45
     },

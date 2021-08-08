@@ -84,8 +84,8 @@ router.get('/', checkIfAuth, async (req, res) => {
                 q = q.where("user_id", "=", form.data.user_id)
             }
 
-            if (form.data.reciever_name) {
-                q = q.where("reciever_name", "like", "%" + form.data.reciever_name + "%")
+            if (form.data.receiver_name) {
+                q = q.where("receiver_name", "like", "%" + form.data.receiver_name + "%")
             }
 
             if (form.data.min_cost) {

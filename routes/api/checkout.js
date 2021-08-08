@@ -33,7 +33,7 @@ router.get('/:user_id', async (req, res) => {
     const newOrder = new Order()
     newOrder.set("user_id", user_info.id)
     newOrder.set("order_status_id", 1)
-    newOrder.set("reciever_name", req.query.name)
+    newOrder.set("receiver_name", req.query.name)
     newOrder.set("receiver_address", req.query.address)
     newOrder.set("order_date", new Date())
     await newOrder.save()
