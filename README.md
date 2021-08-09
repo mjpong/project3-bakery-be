@@ -22,7 +22,7 @@ Site Owner's Goals: This project aims to create an interactive web application u
 
 Github URL: https://github.com/mjpong/project3-bakery-fe
 
-Live Admin Site URL: https://admiring-bell-406bd7.netlify.app/
+Live Admin Site URL: https://mjp-tgc12-project3.herokuapp.com/
 
 Live Consumer Site URL: 
 
