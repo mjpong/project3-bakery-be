@@ -191,34 +191,5 @@ router.get("/logout", (req, res) => {
     res.redirect("/users/login")
 })
 
-
-// get all
-
-router.get("/", (req, res) => {
-    const user = req.session.user;
-
-    if (!user) {
-        req.flash('error_messages', 'Please login to view this page');
-        res.redirect('/users/login');
-    }
-
-    let allProfile = async () => {
-        return await User.fetchAll({
-            require: true
-        })
-    }
-    console.log(1)
-
-    let allProfileJSON = allProfile.toJSON()
-    console.log(allProfileJSON)
-    res.render("users/index", {
-        'users': allProfileJSON
-    })
-
-})
-
-
-
-
 // #3 export out the router
 module.exports = router;
