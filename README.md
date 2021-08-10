@@ -20,9 +20,9 @@ Site Owner's Goals: This project aims to create an interactive web application u
 
 ## React and Access
 
-Github URL: https://github.com/mjpong/project3-bakery-fe
+Github to React and Full Read Me URL: https://github.com/mjpong/project3-bakery-fe
 
 Live Admin Site URL: https://mjp-tgc12-project3.herokuapp.com/
 
-Live Consumer Site URL: 
+Live Consumer Site URL: https://rollwithme.netlify.app/
 
