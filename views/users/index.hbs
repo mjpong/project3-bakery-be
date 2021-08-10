@@ -4,7 +4,7 @@
 
 <div class="container-fluid">
     <div>
-        <h3 style="text-align: center;">All Orders </h3>
+        <h3 style="text-align: center;">All Users </h3>
     </div>
     <div class="row">
 
@@ -12,34 +12,23 @@
             <table class="table ">
                 <thead>
                     <tr>
-                        <th>Order ID</th>
-                        <th>Order Date</th>
                         <th>User ID</th>
-                        <th>Total Cost</th>
-                        <th>Status</th>
+                        <th>Email</th>
+                        <th>Name</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each orders}}
+                    {{#each users}}
                     <tr>
                         <td>
                             {{this.id}}
                         </td>
                         <td>
-                            {{this.orderDateShort}}
+                            {{this.email}}
                         </td>
                         <td>
-                            {{this.user_id}}
-                        </td>
-                        <td>
-                            ${{this.orderCost}}
-                        </td>
-                        <td>
-                            {{this.order_status.status}}
-                        </td>
-                        <td>
-                            <a href="/orders/{{this.id}}" class="btn allbtn">More details</a>
+                            {{this.name}}
                         </td>
                     </tr>
                     {{/each}}
