@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 const crypto = require('crypto');
 const { User } = require('../models')
-
 const { bootstrapField, createUserForm, createLoginForm, createUpdateUserForm } = require("../forms");
 const { Router } = require("express");
 
@@ -184,7 +183,6 @@ router.get('/profile', async (req, res) => {
     }
 })
 
-
 // LOGOUT
 
 router.get("/logout", (req, res) => {
@@ -193,6 +191,30 @@ router.get("/logout", (req, res) => {
     res.redirect("/users/login")
 })
 
+
+// get all
+
+router.get("/", (req, res) => {
+    const user = req.session.user;
+
+    if (!user) {
+        req.flash('error_messages', 'Please login to view this page');
+        res.redirect('/users/login');
+    }
+
+    let allProfile = async () => {
+        return await User.fetchAll({
+            require: true
+        })
+    }
+
+    let allProfileJSON = allProfile.toJSON()
+    console.log(allProfileJSON)
+    res.render("users/index", {
+        'users': allProfileJSON
+    })
+
+})
 
 
 
