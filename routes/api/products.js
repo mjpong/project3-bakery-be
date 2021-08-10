@@ -31,7 +31,7 @@ router.get('/ingredients', async (req, res) => {
 router.post('/search', async (req, res) => {
     let q = Product.collection();
     if (req.body.name) {
-        q = q.where("name", "like", "%" + req.body.name + "%")
+        q = q.where("name", "like", "%" + req.body.name.toLowerCase() + "%")
     }
     if (req.body.flavor_id) {
         q = q.where("flavor_id", "=", req.body.flavor_id)

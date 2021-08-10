@@ -157,6 +157,7 @@ router.post('/create', checkIfAuth, async (req, res) => {
     productForm.handle(req, {
         'success': async (form) => {
             let { toppings, ...productData } = form.data;
+            productData.name = productDate.name.toLowerCase();
             productData.image = req.body.image;
             const product = new Product(productData);
             await product.save();
@@ -215,6 +216,7 @@ router.post('/:product_id/update', checkIfAuth, async (req, res) => {
     productForm.handle(req, {
         'success': async (form) => {
             let { toppings, ...productData } = form.data;
+            productData.name = productDate.name.toLowerCase();
             productData.image = req.body.image;
             product.set(productData)
             await product.save();
