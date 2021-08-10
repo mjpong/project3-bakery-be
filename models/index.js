@@ -8,28 +8,28 @@ const DoughType = bookshelf.model('DoughType', {
     ingredients() {
         return this.belongsToMany("Ingredient")
     }
-});
+})
 
 const Flavor = bookshelf.model('Flavor', {
     tableName: 'flavors',
     products() {
         return this.hasMany('Product');
     }
-});
+})
 
 const Ingredient = bookshelf.model('Ingredient', {
     tableName: 'ingredients',
     dough_types() {
         return this.belongsToMany("DoughType")
     }
-});
+})
 
 const OrderStatus = bookshelf.model('OrderStatus', {
     tableName: 'order_status',
     orders() {
         return this.hasMany("Order")
     }
-});
+})
 
 const Order = bookshelf.model('Order', {
     tableName: 'orders',
@@ -42,7 +42,7 @@ const Order = bookshelf.model('Order', {
     orders_products() {
         return this.hasMany("OrderProduct")
     }
-});
+})
 
 const Product = bookshelf.model('Product', {
     tableName: 'products',
@@ -61,7 +61,7 @@ const Product = bookshelf.model('Product', {
     orders_products() {
         return this.hasMany("OrderProduct")
     }
-});
+})
 
 const OrderProduct = bookshelf.model('OrderProduct', {
     tableName: "orders_products",
@@ -81,14 +81,14 @@ const ShoppingCartItem = bookshelf.model('ShoppingCartItem', {
     user() {
         return this.belongsTo('User');
     }
-});
+})
 
 const Topping = bookshelf.model('Topping', {
     tableName: 'toppings',
     products() {
         return this.belongsToMany("Product")
     }
-});
+})
 
 const User = bookshelf.model('User', {
     tableName: 'users',
@@ -98,12 +98,11 @@ const User = bookshelf.model('User', {
     orders() {
         return this.hasMany("Order")
     }
-});
+})
 
 const BlacklistedToken = bookshelf.model("BlacklistedToken", {
     tableName: "blacklisted_tokens"
 })
-
 
 module.exports = {
     DoughType,

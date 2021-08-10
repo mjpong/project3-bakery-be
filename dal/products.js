@@ -82,7 +82,6 @@ const getIngredients = async () => {
 }
 
 // for forms
-
 const getAllFlavors = async () => {
     return await Flavor.fetchAll().map((flavor) => {
         return [flavor.get('id'), flavor.get('name')];
@@ -103,7 +102,6 @@ const getAllDoughTypes = async () => {
         return [doughtype.get('id'), doughtype.get('name')];
     })
 }
-
 
 const getAllIngredients = async () => {
     return await Ingredient.fetchAll().map(ingredient => {

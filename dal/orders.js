@@ -1,7 +1,6 @@
 const { Order, OrderStatus, Product, OrderProduct } = require("../models")
 
 const getAllOrders = async () => {
-
     return await Order.collection().fetch({
         require: true,
         withRelated: ['order_status', 'orders_products']
@@ -9,7 +8,6 @@ const getAllOrders = async () => {
 }
 
 const getAllOrdersByUser = async (userId) => {
-
     return await Order.collection().where({
         "user_id": userId,
     }).fetch({

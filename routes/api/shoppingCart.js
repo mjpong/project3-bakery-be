@@ -65,7 +65,6 @@ router.post('/increase/:product_id', checkIfAuthJWT, async (req, res) => {
             "message": "Cannot increase item"
         })
     }
-
 })
 
 // reduce quantity
@@ -82,14 +81,12 @@ router.post('/decrease/:product_id', checkIfAuthJWT, async (req, res) => {
                 res.status(200)
                 res.send("Cannot decrease item")
             }
-
         }
     }
     catch (e) {
         res.status(204)
         res.send("Cannot decrease item")
     }
-
 })
 
 

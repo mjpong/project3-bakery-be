@@ -2,10 +2,8 @@ const express = require('express');
 const router = express.Router();
 const CartServices = require('../../services/CartServices')
 const Stripe = require('stripe')(process.env.STRIPE_KEY_SECRET)
-const bodyParser = require("body-parser")
 const { Order, OrderProduct, Product } = require("../../models")
 const jwt = require("jsonwebtoken");
-const { checkIfAuthJWT } = require('../../middleware');
 
 router.get('/', async (req, res) => {
     let user_info = "";
@@ -131,6 +129,5 @@ router.post('/process_payment', express.json({ type: 'application/json' }), asyn
     }
     res.sendStatus(200)
 })
-
 
 module.exports = router;

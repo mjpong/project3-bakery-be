@@ -1,5 +1,4 @@
 const forms = require("forms");
-const { Product } = require('../models');
 const fields = forms.fields;
 const validators = forms.validators;
 const widgets = forms.widgets;

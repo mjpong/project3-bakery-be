@@ -164,12 +164,11 @@ router.post("/register", async (req, res) => {
 
 // POST Profile change
 router.post("/update", checkIfAuthJWT, async (req, res) => {
-    // if (req.body.password !== req.body.confirmPassword) {
-    //     res.send("Passwords do not match");
-    // }
+    if (req.body.password !== req.body.confirmPassword) {
+        res.send("Passwords do not match");
+    }
 
     try {
-
         let user = await User.where({
             "id": req.user.id
         }).fetch({

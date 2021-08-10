@@ -25,6 +25,6 @@ router.get("/:order_id", checkIfAuthJWT, async (req, res) => {
     } catch (e) {
         res.send("Unable to get individual order")
     }
-
 })
+
 module.exports = router;

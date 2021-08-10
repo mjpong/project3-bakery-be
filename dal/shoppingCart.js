@@ -1,4 +1,4 @@
-const { ShoppingCartItem, Product } = require("../models")
+const { ShoppingCartItem } = require("../models")
 const productDataLayer = require('../dal/products')
 
 const getAllItems = async (userId) => {
