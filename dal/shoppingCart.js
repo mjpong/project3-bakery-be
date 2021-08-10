@@ -5,7 +5,7 @@ const getAllItems = async (userId) => {
 
     return await ShoppingCartItem.collection().where({
         "user_id": userId
-    }).query("orderBy", 'user_id', 'ASC').fetch({
+    }).query("orderBy", 'product_id', 'ASC').fetch({
         require: false,
         withRelated: ['product']
     })
