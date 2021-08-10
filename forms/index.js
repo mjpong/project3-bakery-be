@@ -324,6 +324,7 @@ const createLoginForm = () => {
 const createSearchForm = (flavors, toppings, dough_types) => {
     return forms.create({
         "name": fields.string({
+            label: "Product Name",
             errorAfterField: true,
             cssClasses: {
                 label: ["form-label"]
@@ -405,30 +406,35 @@ const createOrderSearchForm = (status) => {
             choices: status
         }),
         "order_id": fields.number({
+            label: "Order ID",
             required: false,
             cssClasses: {
                 label: ["form-label"],
             },
         }),
         "user_id": fields.number({
+            label: "User ID",
             required: false,
             cssClasses: {
                 label: ["form-label"],
             },
         }),
         "receiver_name": fields.string({
+            label: "Receiver Name",
             required: false,
             cssClasses: {
                 label: ["form-label"],
             },
         }),
         "min_cost": fields.number({
+            label: "Min Cost",
             required: false,
             cssClasses: {
                 label: ["form-label"],
             },
         }),
         "max_cost": fields.number({
+            label: "Max Cost",
             required: false,
             cssClasses: {
                 label: ["form-label"],
