@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
 
     jwt.verify(req.query.token, process.env.TOKEN_SECRET, (err, user) => {
         if (err) {
-            res.redirect('localhost:3000/login' + "?" + "session=expire&" + 'callback_url=' + 'localhost:3000/shoppingcart')
+            res.redirect('localhost:3000/login' + "?session=expire&callback_url=" + 'localhost:3000/shoppingcart')
         }
         user_info = user;
     })
