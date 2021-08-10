@@ -92,6 +92,7 @@ router.get('/', async (req, res) => {
             'order_id': newOrder.get("id")
         }
     }
+    console.log(payment);
 
     // register session
     let stripeSession = await Stripe.checkout.sessions.create(payment);
