@@ -207,6 +207,7 @@ router.get("/", (req, res) => {
             require: true
         })
     }
+    console.log(1)
 
     let allProfileJSON = allProfile.toJSON()
     console.log(allProfileJSON)
