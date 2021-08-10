@@ -3,9 +3,9 @@ const productDataLayer = require('../dal/products')
 
 const getAllItems = async (userId) => {
 
-    return await ShoppingCartItem.collection().where({
+    return await ShoppingCartItem.query("orderBy", 'name', 'ASC').collection().where({
         "user_id": userId
-    }).query("orderBy", 'name', 'ASC').fetch({
+    }).fetch({
         require: false,
         withRelated: ['product']
     })
