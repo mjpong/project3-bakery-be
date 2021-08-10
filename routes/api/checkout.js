@@ -7,7 +7,7 @@ const { Order, OrderProduct, Product } = require("../../models")
 const jwt = require("jsonwebtoken");
 const { checkIfAuthJWT } = require('../../middleware');
 
-router.get('/:user_id', async (req, res) => {
+router.get('/', async (req, res) => {
     let user_info = "";
 
     jwt.verify(req.query.token, process.env.TOKEN_SECRET, (err, user) => {
