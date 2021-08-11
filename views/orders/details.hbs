@@ -16,7 +16,7 @@
             <p>User ID: {{order.user_id}}</p>
             <p class="receiver-name">Receiver Name: {{order.receiver_name}}</p>
             <p>Receiver Address: {{order.receiver_address}}</p>
-            <p>Total Cost: {{order.orderCost}}</p>
+            <p>Total Cost: ${{order.orderCost}}</p>
             <p>Order Date: {{order.orderDateShort}}</p>
             <p>Completion Date: {{order.completionDateShort}}</p>
         </div>
@@ -50,7 +50,7 @@
                 <td>
                     {{this.product_id}}
                 </td>
-                <td>
+                <td class="product-name">
                     {{this.product.name}}
                 </td>
 
