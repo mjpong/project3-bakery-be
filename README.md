@@ -26,3 +26,12 @@ Live Admin Site URL: https://mjp-tgc12-project3.herokuapp.com/
 
 Live Consumer Site URL: https://rollwithme.netlify.app/
 
+## Testing User Accounts
+**Please make sure that after all testing is done, that the user details are reverted to the original.**
+**Especially if the password has been updated, please change it back.**
+If there are any errors and password cannot be reverted back to original, please reach out to let me know.
+
+|Category |Email Address | Password |
+|:---------|:----------------------|:---------------------|
+|Customer Side  | tester@rollwithme.com | testing123 |
+|Admin Side | admin@rollwithme.com | admin123 |
